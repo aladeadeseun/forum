@@ -15,6 +15,8 @@ const parsedEnvFile = dotenv.config({
 
 const configValue = Env.parse(parsedEnvFile.parsed)
 
+console.log("config initialization ran")
+
 export default function getConfig<
   K extends keyof EnvType
 >(key: K, defaultValue?: ConfigReturnType<K>): ConfigReturnType<K>{

@@ -1,8 +1,12 @@
 
 
-import { ApolloServer } from '@apollo/server';
+import { ApolloServer, GraphQLRequestContextWillSendResponse } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+
+import compression from "compression";
+
+import cookieParser from "cookie-parser";
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -17,13 +21,23 @@ import depthLimit from 'graphql-depth-limit';
 
 import getConfig from "./config";
 
+import { connectDB, disconnectDB } from './db/connectDB';
 import schema from "./schema";
+import { Context, context } from './util/context';
 
-interface MyContext {
-  token?: String;
-}
+process.on("uncaughtException", (err) => {
+  console.log(`Error occur ${err}`);
+  //process.exit(1);
+});
+
+// do something when app is closing
+process.on('beforeExit', async function(){
+  await disconnectDB()
+});
 
 async function main(){
+
+  await connectDB()
   
   const PORT = getConfig("PORT");
 
@@ -40,13 +54,12 @@ async function main(){
   const serverCleanup = useServer({ schema }, wsServer);
 
   // Set up ApolloServer.
-  const server = new ApolloServer<MyContext>({
+  const server = new ApolloServer<Context>({
     schema,
     validationRules:[depthLimit(10)],
     plugins: [
       // Proper shutdown for the HTTP server.
-      ApolloServerPluginDrainHttpServer({ httpServer }),
-
+      ApolloServerPluginDrainHttpServer({ httpServer, }),
       // Proper shutdown for the WebSocket server.
       {
         async serverWillStart() {
@@ -57,19 +70,66 @@ async function main(){
           };
         },
       },
+      {
+        async requestDidStart() {
+          return {
+            /**
+             * https://www.apollographql.com/docs/apollo-server/migration/
+             * https://github.com/apollographql/apollo-server/discussions/7209 
+             */
+            async willSendResponse(requestContext) {
+              const { response } = requestContext;
+              // Augment response with an extension, as long as the operation
+              // actually executed. (The `kind` check allows you to handle
+              // incremental delivery responses specially.)
+              //I want to make this changes when sending last response to client
+              //Object.keys(omit(response.body.singleResult.data, "__schema")).length > 0
+              if (
+                response.body.kind === 'single' 
+                && response.body.singleResult.data
+                && !response.body.singleResult.data.__schema
+                && !response.body.singleResult.extensions?.csrf
+              ) {
+                //const {userAuthReq:{csrf, newToken, exp, keepMeLoggedIn}} = requestContext as GraphQLRequestContextWillSendResponse<Context>
+
+                const {
+                  userAuthReq:{
+                    csrf, token, exp, keepMeLoggedIn, hasNewToken
+                  }, sessionService
+                  //userAuthReq:{ csrf, token, hasNewToken }
+                } = requestContext.contextValue
+                
+                //if new token is generated store in cookie
+                if(hasNewToken){
+                  //response.http.headers.set("Set-Cookie", `${"forum"}=${token};expires=${expiryDate};path=${path};HttpOnly=${httpOnly};Secure=${true};SameSite=None;`)
+                  sessionService.setCookie(response, token, keepMeLoggedIn ? exp : 0);
+                }
+
+                response.body.singleResult.extensions = {
+                  ...response.body.singleResult.extensions,
+                  csrf
+                };
+              }
+            },
+          };
+        }
+      }
     ],
   });
 
   await server.start();
   app.use(
     '/graphql', 
-    cors<cors.CorsRequest>(), 
+    compression(),
+    cors<cors.CorsRequest>({
+      //origin: 'https://studio.apollographql.com',
+      //https://studio.apollographql.com/sandbox/explorer
+      origin:"*",
+      credentials: true
+    }), 
+    cookieParser(),
     bodyParser.json(), 
-    expressMiddleware(server, {
-      context: async ({ req }: {req:any}) => {
-        return {token:req.header['token']}
-      },
-    })
+    expressMiddleware(server, { context, })
   );
 
   // Now that our HTTP server is fully set up, actually listen.
@@ -77,7 +137,6 @@ async function main(){
     console.log(`🚀 Query endpoint ready at http://localhost:${PORT}/graphql`);
     console.log(`🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`);
   });
-
 }
 
-main()
+main().catch(console.error)

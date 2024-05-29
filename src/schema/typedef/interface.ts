@@ -1,8 +1,8 @@
 export default `#graphql
   interface MutationResponse {
-    code: String!
+    #code: String!
     success: Boolean!
-    message: String
+    msg: String
     error:JSON
   }
 `

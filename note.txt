@@ -1,0 +1,4 @@
+creating pluggin for apollo server
+https://stackoverflow.com/questions/59988906/how-do-i-write-a-apollo-server-plugin-to-log-the-request-and-its-duration
+https://www.apollographql.com/docs/apollo-server/data/errors/
+https://www.apollographql.com/docs/apollo-server/v2/integrations/plugins/
