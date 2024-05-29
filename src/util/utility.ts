@@ -30,6 +30,10 @@ export function errorResponse(which: ErrorResponseType, validationError?: any){
     case "account_banned":
       msg = "Your account has been ban."
     break
+
+    case "invalid_csrf":
+      msg = "Invalid or missing CSRF token"
+    break
     
     default:
       msg = "Internal server error, please try again later."

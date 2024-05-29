@@ -1,6 +1,6 @@
 
 
-import { ApolloServer, GraphQLRequestContextWillSendResponse } from '@apollo/server';
+import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 
@@ -51,6 +51,7 @@ async function main(){
     server: httpServer,
     path: '/graphql',
   });
+
   const serverCleanup = useServer({ schema }, wsServer);
 
   // Set up ApolloServer.
@@ -98,7 +99,7 @@ async function main(){
                   }, sessionService
                   //userAuthReq:{ csrf, token, hasNewToken }
                 } = requestContext.contextValue
-                
+
                 //if new token is generated store in cookie
                 if(hasNewToken){
                   //response.http.headers.set("Set-Cookie", `${"forum"}=${token};expires=${expiryDate};path=${path};HttpOnly=${httpOnly};Secure=${true};SameSite=None;`)

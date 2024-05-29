@@ -69,7 +69,7 @@ export default class SessionService {
 
   async generateToken(sub:string, keepMeLoggedIn:boolean){
     const iat : number = Date.now() / 1000;
-    const exp : number = (iat + sessAccessTokenExp);
+    const exp : number = Math.floor((iat + sessAccessTokenExp));
     const csrf:string = this.getCsrfToken();
     //iat:now,
     const jwt = await this.signToken(sub, csrf, keepMeLoggedIn, exp, iat)

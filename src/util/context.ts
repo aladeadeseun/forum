@@ -15,13 +15,18 @@ const sessName = getConfig("SESS_NAME")
 const sessRefreshTokenExpiration = getConfig("SESS_REFRESH_TOKEN_EXPIRE_IN")
 
 export async function context( { req } : {req:any}){
-  
+  //make a new instance of the user service object
   const userService = new UserService()
 
+  //get the token from cookie or header authorization
   const token:string  = (req.cookies && req.cookies[sessName]) || req.headers.authorization || ''
+  //I expect client to put the csrf token in the header
+  const clientCsrf = req.headers.csrf || ""
 
+  //try to parse it
   const {msg, payload}  = await sessionService.getPayload(token);
 
+  //set user auth request to default value
   const userAuthReq : UserAuthRequest = {
     user : null ,
     msg, 
@@ -29,7 +34,8 @@ export async function context( { req } : {req:any}){
     csrf:"",
     keepMeLoggedIn:false,
     exp:0,
-    hasNewToken:false
+    hasNewToken:false,
+    clientCsrf
   };
 
   //if token was successfully decoded and we have subject

@@ -1,5 +1,5 @@
 export default `#graphql
   type Query{
-    hello: String
+    hello: String @upper
   }
 `

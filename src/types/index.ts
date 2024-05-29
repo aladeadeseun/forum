@@ -8,7 +8,7 @@ export enum RoleType {
   //GUEST="guest"
 }
 
-export type ErrorResponseType = "validation_error" | "login_error" | "account_banned"
+export type ErrorResponseType = "validation_error" | "login_error" | "account_banned" | "invalid_csrf"
 
 export type JwtPayloadWithCsrfToken = JwtPayload & { csrf:string, kp:boolean }
 
@@ -19,16 +19,22 @@ export interface UserAuthRequest {
   csrf:string,
   keepMeLoggedIn:boolean,
   exp:number,
-  hasNewToken:boolean
+  hasNewToken:boolean, 
+  clientCsrf:string
 };
 
 export type LoginInputType = {
   password: User['password'],
-  usernameOrEmail: string
+  usernameOrEmail: string,
+  keepMeLoggedIn:boolean
+  
 }
 
 export type HelpExtractFromObject<T extends {}, U extends keyof T> = {
   [K in U]: T[K]
 }
 
-  export type CreateUserInput = HelpExtractFromObject<User, "email" | "username" | "password" | "shortBio"> & {cfmPsd:string}
+export type CreateUserInput = (
+  HelpExtractFromObject<User, "email" | "username" | "password" | "shortBio"> 
+  & {cfmPsd:string}
+)

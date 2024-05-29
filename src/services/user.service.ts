@@ -4,6 +4,8 @@ import UserModel, { User } from "../model/user.schema";
 
 import getConfig from "../config";
 import { CreateUserInput, ErrorResponseType, HelpExtractFromObject, LoginInputType } from "../types";
+import { Context } from "../util/context";
+import SessionService from "./session.service";
 
 const saltRounds = getConfig("SALT_ROUND")
 
@@ -31,7 +33,9 @@ export default class UserService{
   }
 
   async authenticate(
-    {usernameOrEmail, password}:LoginInputType
+    {usernameOrEmail, password, keepMeLoggedIn}:LoginInputType,
+    sessionService: SessionService,
+    userAuthReq:Context['userAuthReq']
   ): Promise<ErrorResponseType | HelpExtractFromObject<User, Exclude<keyof User, "password">>>{
     //get user if exist
     const user = await UserModel.findOne({$or:[{email:usernameOrEmail}, {username:usernameOrEmail}]}).select([
@@ -49,6 +53,14 @@ export default class UserService{
     //compare(password, user.password)
     //check if the password is correct
     if(!(await argon2.verify(user.password, password))) return "login_error"
+
+    //generate token
+    const {exp, csrf, jwt} = await sessionService.generateToken(user._id.toHexString(),keepMeLoggedIn)
+    //set value
+    userAuthReq.exp = exp
+    userAuthReq.csrf = csrf
+    userAuthReq.token = jwt
+    userAuthReq.hasNewToken = true
 
     return user.toObject()
   }

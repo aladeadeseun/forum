@@ -5,6 +5,8 @@ export default `#graphql
     password:String
     #User can login with email or username
     usernameOrEmail:String
+    #I need this value to set cookie value.
+    keepMeLoggedIn:Boolean!=false
   }
 
   #Am not make it compulsory because I want to do input validation. All field marked as required should be supplied by user.

@@ -15,13 +15,4 @@ import Scalar from './scalar'
 import Subscription from "./subscription"
 import Types from "./types"
 
-export default `#graphql
-  ${Interface}
-  ${Enum}
-  ${Scalar}
-  ${Input}
-  ${Types}
-  ${Subscription}
-  ${Mutation}
-  ${Query}
-`
+export default [Interface, Enum, Scalar, Input, Types, Subscription, Mutation, Query]
