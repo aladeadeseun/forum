@@ -1,5 +1,5 @@
 import argon2 from "argon2";
-import { ObjectId } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import UserModel, { User } from "../model/user.schema";
 
 import getConfig from "../config";
@@ -12,12 +12,14 @@ const saltRounds = getConfig("SALT_ROUND")
 export default class UserService{
   async createCustomer({password, email, username, shortBio}: CreateUserInput){
 
-    console.log({username})
-
     return UserModel.create({
       email, password: await argon2.hash(password, {hashLength:saltRounds}),
       shortBio:shortBio, username
     })
+  }
+
+  async updateUser(userId: Types.ObjectId, update:{[K in keyof User]?:User[K]}){
+    return UserModel.findOneAndUpdate({_id:userId}, {$set:update})
   }
 
   async checkIfEmailAlreadyExists(
@@ -42,8 +44,6 @@ export default class UserService{
       "password", "email", "shortBio", "avatar", "createdAt",
       "role", "isEmailVerified", "active", "updatedAt", "username"
     ])
-
-    //console.log(user)
 
     //if the user with the email does not exists, return false
     if(!user) return "login_error"

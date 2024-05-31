@@ -3,5 +3,7 @@ export default `#graphql
     MEMBER,
     MODERATOR,
     ADMIN,
+    GUEST,
+    REVIEWER,
   }
 `

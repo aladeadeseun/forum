@@ -1,13 +1,24 @@
-function getMutationResponse(mustionResponse: string, dataRes: string){
+function getMutationResponse(mustionResponse: string, dataRes?: string){
+  
+  if(dataRes){
+    return `
+      type ${mustionResponse} implements MutationResponse {
+        success: Boolean!
+        msg: String
+        error:JSON
+        data:${dataRes}
+      }
+    `
+  }
   return `
     type ${mustionResponse} implements MutationResponse {
       success: Boolean!
       msg: String
       error:JSON
-      data:${dataRes}
     }
   `
 }
+
 export default `#graphql
   
   #Each user detail
@@ -24,4 +35,6 @@ export default `#graphql
 
   ${getMutationResponse("CreateUserMutationResponse", "User")}
   ${getMutationResponse("LoginMutationResponse", "User")}
+  ${getMutationResponse("SendVerificationEmailMutationResponse")}
+  ${getMutationResponse("VerifyEmailMutationResponse")}
 `

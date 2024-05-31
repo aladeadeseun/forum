@@ -4,6 +4,7 @@ import { Types } from "mongoose";
 import { RoleType } from "../types";
 
 export class User extends TimeStamps{
+  
   public readonly _id!: Types.ObjectId
 
   @prop({default:true})

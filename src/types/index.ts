@@ -5,10 +5,19 @@ export enum RoleType {
   ADMIN="admin",
   MODERATOR="moderator",
   MEMBER="member",
-  //GUEST="guest"
+  GUEST="guest",
+  REVIEWER="reviewer"
 }
 
-export type ErrorResponseType = "validation_error" | "login_error" | "account_banned" | "invalid_csrf"
+export type ErrorResponseType = 
+  "validation_error" 
+  | "login_error" 
+  | "account_banned" 
+  | "invalid_csrf" 
+  | "auth_error"
+  | "email_verification_error"
+  | "email_already_verified"
+  
 
 export type JwtPayloadWithCsrfToken = JwtPayload & { csrf:string, kp:boolean }
 
@@ -38,3 +47,7 @@ export type CreateUserInput = (
   HelpExtractFromObject<User, "email" | "username" | "password" | "shortBio"> 
   & {cfmPsd:string}
 )
+
+export type PayslipAttachments = {filename:string, content:Buffer}
+
+export type GetEmailAsStringOrArray = "string" | "array"

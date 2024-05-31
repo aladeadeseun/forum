@@ -28,6 +28,6 @@ export const UserSchema = z.object({
 })
 
 export const UserAuthSchema = z.object({
-  email: z.string().email().trim().toLowerCase(),
+  usernameOrEmail: z.string().min(3).max(50).trim().toLowerCase(),
   password: z.string().min(6).max(30).toLowerCase(),
 })

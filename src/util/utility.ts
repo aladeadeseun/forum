@@ -14,8 +14,7 @@ export function getNanoId(){
   return v4();
 }
 
-export function errorResponse(which: ErrorResponseType, validationError?: any){
-
+export function getMsg(which: ErrorResponseType){
   let msg
 
   switch (which) {
@@ -34,15 +33,39 @@ export function errorResponse(which: ErrorResponseType, validationError?: any){
     case "invalid_csrf":
       msg = "Invalid or missing CSRF token"
     break
+
+    case "auth_error":
+      msg = `You must be logged in to access this resource.`
+    break
+
+    case "email_verification_error":
+      msg = `You need to verify your email to access this resource.`
+    break
+
+    case "email_already_verified":
+      msg = "Your email is already verified."
+    break
     
     default:
       msg = "Internal server error, please try again later."
     break;
   }
 
+  return msg
+}
+
+export function errorResponse(which: ErrorResponseType, validationError?: any){
+  return { success:false, msg:getMsg(which), error:validationError, data:null }
+}
+
+export function errorResponseWithMsg(msg:string, validationError?: any){
   return { success:false, msg, error:validationError, data:null }
 }
 
-export function successResponse<T>(msg: string, data: T | null){
+export function successResponse<T>(msg: string, data?: T | null){
   return { success:true, msg, error:null, data }
+}
+
+export function getRandomNumber(min: number, max: number){
+  return (min + Math.floor((Math.random() * ((max + 1) - min))))
 }

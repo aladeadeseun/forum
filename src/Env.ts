@@ -10,4 +10,11 @@ export default z.object({
   SESS_NAME:z.string(),
   SALT_ROUND:z.coerce.number(),
   SESS_SECRET_TOKEN:z.string(),
+  MAX_PIN_REG:z.coerce.number().lte(6).gte(3),
+  MAX_PIN_REG_WAIT_TIME:z.coerce.number(),
+  MAIL_SERVICE:z.string(),
+  MAIL_USERNAME:z.string(),
+  MAIL_PASS:z.string(),
+  FROM_MAIL:z.string(),
+  OTP_EXPIRY_IN_MIN:z.coerce.number(),
 })

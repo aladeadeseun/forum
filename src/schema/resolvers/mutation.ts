@@ -1,10 +1,14 @@
+import { Otp } from "../../model/otp.schema";
 import { CreateUserInput, LoginInputType } from "../../types";
 import { Context } from "../../util/context";
-import { errorResponse, successResponse } from "../../util/utility";
+import { getOtpTemplate } from "../../util/email-template";
+import { errorResponse, errorResponseWithMsg, successResponse } from "../../util/utility";
+import { PinSchema } from "../../validation/pin.validator";
 import { UserAuthSchema, UserSchema } from "../../validation/user.validator";
 
 export default {
   async createNewUser(_root: any, {input}:{input:CreateUserInput}, {userService}: Context){
+
     const valResult =  UserSchema.safeParse(input)
 
     if(!valResult.success){
@@ -55,5 +59,46 @@ export default {
     }
 
     return successResponse("Login successful", user)
-  }
+  },
+
+  async sendOtpEmail(_root:any, _arg:any, {userAuthReq, otpService}:Context){
+    //, emailService
+    //get user
+    const user = userAuthReq.user!
+    //{userService, sessionService, userAuthReq}:Context
+    //check if the email is already verified
+    if(user.isEmailVerified){
+      return successResponse<string>("Email already verified.", "")
+    }
+    //create otp
+    const result = await otpService.createOtp(user._id)
+    if(typeof result === "string"){
+      return errorResponseWithMsg(result)
+    }
+
+    //send otp message to
+    //await emailService.sendEmail(user.email, "Email Verification", getOtpTemplate(user.username, result.pin))
+
+    //send response back to caller
+    return successResponse(`Email verification otp sent to ${user.email}. ${result.pin}`);
+  },
+
+  async verifyEmail(_root:any, {pin}:{pin:string}, {userAuthReq, otpService, userService}: Context){
+    //
+    const valResult =  PinSchema.safeParse({pin})
+
+    if(!valResult.success){
+      return errorResponse("validation_error", valResult.error.flatten().fieldErrors)
+    }
+    const user = userAuthReq.user!
+    
+    const {success, msg} = await otpService.verifyUserEmail(user._id, pin)
+
+    if(success){
+      if(await userService.updateUser(user._id, {isEmailVerified:true})){
+        return successResponse(msg)
+      }//end if
+    }//end if
+    return errorResponseWithMsg(msg)
+  }//end 
 }

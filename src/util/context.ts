@@ -1,5 +1,7 @@
 
 import getConfig from "../config";
+import EmailService from "../services/email.service";
+import OtpService from "../services/otp.service";
 import SessionService from "../services/session.service";
 import UserService from "../services/user.service";
 import { UserAuthRequest } from "../types";
@@ -8,6 +10,8 @@ export interface Context {
   userService:UserService,
   sessionService:SessionService
   userAuthReq:UserAuthRequest,
+  otpService:OtpService,
+  emailService:EmailService
 }
 
 const sessionService = new SessionService()
@@ -17,6 +21,8 @@ const sessRefreshTokenExpiration = getConfig("SESS_REFRESH_TOKEN_EXPIRE_IN")
 export async function context( { req } : {req:any}){
   //make a new instance of the user service object
   const userService = new UserService()
+  const otpService = new OtpService()
+  const emailService = new EmailService()
 
   //get the token from cookie or header authorization
   const token:string  = (req.cookies && req.cookies[sessName]) || req.headers.authorization || ''
@@ -74,5 +80,5 @@ export async function context( { req } : {req:any}){
     userAuthReq.csrf = csrf;
   }//end if(userAuthReq.hasNewToken)
   //return context
-  return {userAuthReq, userService, sessionService};
+  return {userAuthReq, userService, sessionService, otpService, emailService};
 }//end function context
