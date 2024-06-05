@@ -1,4 +1,5 @@
 import { JwtPayload } from "jsonwebtoken"
+import { Category } from "../model/category.schema"
 import { User } from "../model/user.schema"
 
 export enum RoleType {
@@ -17,6 +18,7 @@ export type ErrorResponseType =
   | "auth_error"
   | "email_verification_error"
   | "email_already_verified"
+  | "permission_error"
   
 
 export type JwtPayloadWithCsrfToken = JwtPayload & { csrf:string, kp:boolean }
@@ -51,3 +53,5 @@ export type CreateUserInput = (
 export type PayslipAttachments = {filename:string, content:Buffer}
 
 export type GetEmailAsStringOrArray = "string" | "array"
+
+export type CreateCategoryInput = HelpExtractFromObject<Category, "name">

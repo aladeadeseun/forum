@@ -33,8 +33,16 @@ export default `#graphql
     isEmailVerified:Boolean!
   }
 
+  type Category{
+    _id:ID!
+    name:String!
+    createdAt:DateTime!
+    updatedAt:DateTime!
+  }
+
   ${getMutationResponse("CreateUserMutationResponse", "User")}
   ${getMutationResponse("LoginMutationResponse", "User")}
   ${getMutationResponse("SendVerificationEmailMutationResponse")}
   ${getMutationResponse("VerifyEmailMutationResponse")}
+  ${getMutationResponse("CategoryRequestResponse", "Category")}
 `

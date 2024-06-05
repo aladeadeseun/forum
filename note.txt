@@ -5,3 +5,12 @@ https://www.apollographql.com/docs/apollo-server/v2/integrations/plugins/
 
 app password
 fgow vlqz rzzn zanb
+
+https://www.figma.com/proto/aCm7gSo49bX3Bq2w1PUF4a/%F0%9F%8C%8E-Free-Blog-Template-Design-(Community)?node-id=118-1910&t=DYDulyPS4arColJn-0&scaling=scale-down&page-id=118%3A1909
+
+https://www.figma.com/design/aCm7gSo49bX3Bq2w1PUF4a/%F0%9F%8C%8E-Free-Blog-Template-Design-(Community)?node-id=118-1909&t=DYDulyPS4arColJn-0
+
+directive tutorial
+https://engineering.zalando.com/posts/2023/10/understanding-graphql-directives-practical-use-cases-zalando.html
+
+https://boopathi.blog/graphql-directives-an-introduction

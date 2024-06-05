@@ -25,13 +25,13 @@ export default class UserService{
   async checkIfEmailAlreadyExists(
     email: User['email']
   ): Promise<boolean>{
-    return !!(await UserModel.findOne({email}))
+    return !!(await UserModel.findOne({email}), ["_id"])
   }
 
   async checkIfUsernameExist(
     username: User['username']
   ): Promise<boolean>{
-    return !!(await UserModel.findOne({username}))
+    return !!(await UserModel.findOne({username}, ["_id"]))
   }
 
   async authenticate(

@@ -45,6 +45,10 @@ export function getMsg(which: ErrorResponseType){
     case "email_already_verified":
       msg = "Your email is already verified."
     break
+
+    case "permission_error":
+      msg = "You do not have permission to access this resource."
+    break
     
     default:
       msg = "Internal server error, please try again later."
