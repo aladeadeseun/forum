@@ -6,9 +6,6 @@ import { Types } from "mongoose";
 export class Category extends TimeStamps{
   public readonly _id!: Types.ObjectId
 
-  @prop({required:true})
-  timestamp!:number
-
   @prop({
     required: true,
     trim: true,
@@ -18,7 +15,7 @@ export class Category extends TimeStamps{
   })
   name!:string
 
-  @prop({default:null})
+  @prop()
   deletedAt!:Date | null
 }
 

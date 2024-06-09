@@ -11,10 +11,10 @@ const saltRounds = getConfig("SALT_ROUND")
 
 export default class UserService{
   async createCustomer({password, email, username, shortBio}: CreateUserInput){
-
+    
     return UserModel.create({
       email, password: await argon2.hash(password, {hashLength:saltRounds}),
-      shortBio:shortBio, username
+      shortBio, username
     })
   }
 
@@ -25,7 +25,7 @@ export default class UserService{
   async checkIfEmailAlreadyExists(
     email: User['email']
   ): Promise<boolean>{
-    return !!(await UserModel.findOne({email}), ["_id"])
+    return !!(await UserModel.findOne({email}, ["_id"]))
   }
 
   async checkIfUsernameExist(

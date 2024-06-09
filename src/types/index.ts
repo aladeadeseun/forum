@@ -55,3 +55,5 @@ export type PayslipAttachments = {filename:string, content:Buffer}
 export type GetEmailAsStringOrArray = "string" | "array"
 
 export type CreateCategoryInput = HelpExtractFromObject<Category, "name">
+
+export type CategoryIdObjectType = {categoryId:string}

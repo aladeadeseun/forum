@@ -7,9 +7,13 @@ export default `#graphql
     #Send otp email for email verification
     sendOtpEmail:SendVerificationEmailMutationResponse @checkCsrf @isloggedin(emailMustBeVerified: false, throwError:false)
     #verify email with pin mutation
-    verifyEmail(pin:String): VerifyEmailMutationResponse @checkCsrf @isloggedin(emailMustBeVerified: false, throwError:false)
+    verifyEmail(pin:String!): VerifyEmailMutationResponse @checkCsrf @isloggedin(emailMustBeVerified: false, throwError:false)
     #create new category
-    createCategory(name:String): CategoryRequestResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false) @haspermission(requires:[ADMIN], throwError:false)
+    createCategory(name:String!): CategoryRequestResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false) @haspermission(requires:[ADMIN], throwError:false)
+    #update existing category
+    updateCategory(name:String!, categoryId:ID!): CategoryRequestResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false) @haspermission(requires:[ADMIN], throwError:false)
+    #delete existing category
+    deleteCategory(categoryId:ID!): CategoryRequestResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false) @haspermission(requires:[ADMIN], throwError:false)
   }
 `
 //@haspermission(requires:[ADMIN], throwError:false)

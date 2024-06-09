@@ -5,7 +5,7 @@ export const UserSchema = z.object({
   email: z.string({
     invalid_type_error:"Email must be a string",
     required_error:"Email is required"
-  }).email().trim().toLowerCase(),
+  }).min(6).max(50).email().trim().toLowerCase(),
 
   password: z.string({
     invalid_type_error:"Password must contain atleast one special character, number",
@@ -18,7 +18,7 @@ export const UserSchema = z.object({
 
   cfmPsd: z.string().toLowerCase(),
 
-  short_bio:z.string().min(1).max(50).optional(),
+  shortBio:z.string().min(1).max(50).optional(),
 
   username:z.string().min(3).max(50)
   

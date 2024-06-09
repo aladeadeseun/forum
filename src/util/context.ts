@@ -1,5 +1,6 @@
 
 import getConfig from "../config";
+import CategoryService from "../services/category.service";
 import EmailService from "../services/email.service";
 import OtpService from "../services/otp.service";
 import SessionService from "../services/session.service";
@@ -11,7 +12,8 @@ export interface Context {
   sessionService:SessionService
   userAuthReq:UserAuthRequest,
   otpService:OtpService,
-  emailService:EmailService
+  emailService:EmailService,
+  categoryService:CategoryService
 }
 
 const sessionService = new SessionService()
@@ -23,6 +25,7 @@ export async function context( { req } : {req:any}){
   const userService = new UserService()
   const otpService = new OtpService()
   const emailService = new EmailService()
+  const categoryService = new CategoryService()
 
   //get the token from cookie or header authorization
   const token:string  = (req.cookies && req.cookies[sessName]) || req.headers.authorization || ''
@@ -80,5 +83,12 @@ export async function context( { req } : {req:any}){
     userAuthReq.csrf = csrf;
   }//end if(userAuthReq.hasNewToken)
   //return context
-  return {userAuthReq, userService, sessionService, otpService, emailService};
+  return {
+    userAuthReq, 
+    userService, 
+    sessionService, 
+    otpService, 
+    emailService,
+    categoryService
+  };
 }//end function context

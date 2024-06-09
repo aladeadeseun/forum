@@ -38,7 +38,7 @@ export function hasPermissionDirective(directiveName: string) {
 
             const {requires, throwError} = permissionDirective
 
-            console.log(requires)
+            //console.log(requires)
 
             const { resolve = defaultFieldResolver } = fieldConfig
 
@@ -55,7 +55,7 @@ export function hasPermissionDirective(directiveName: string) {
                 }
               }
 
-              console.log({role:user.role})
+              //console.log({role:user.role})
 
               if((requires as RoleType[]).indexOf(user.role) < 0){
                 if(throwError){

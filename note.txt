@@ -14,3 +14,5 @@ directive tutorial
 https://engineering.zalando.com/posts/2023/10/understanding-graphql-directives-practical-use-cases-zalando.html
 
 https://boopathi.blog/graphql-directives-an-introduction
+
+ademega4 | password
