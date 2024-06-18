@@ -1,4 +1,3 @@
-import { Document, Types } from "mongoose";
 import { default as CategoryModel, default as categorySchema } from "../model/category.schema";
 import { CreateCategoryInput } from "../types";
 
@@ -8,7 +7,6 @@ export default class CategoryService {
     name = name.toLocaleUpperCase()
     //fetch 
     return CategoryModel.findOne({name}).select(["deletedAt", "_id", "name", "createdAt", "updatedAt"])
-    
   }
 
   async create({name}:CreateCategoryInput){

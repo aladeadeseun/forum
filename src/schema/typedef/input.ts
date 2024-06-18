@@ -22,4 +22,11 @@ export default `#graphql
     #Short bio, optional
     shortBio:String=""
   }
+
+  input CreateThread{
+    #Thread title.
+    title:String!
+    #Thread content.
+    content:String!
+  }
 `

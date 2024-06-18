@@ -17,4 +17,5 @@ export default z.object({
   MAIL_PASS:z.string(),
   FROM_MAIL:z.string(),
   OTP_EXPIRY_IN_MIN:z.coerce.number(),
+  SAVE_COMMENT_IMAGE_EXPIRY:z.coerce.number(),
 })

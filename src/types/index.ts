@@ -1,5 +1,6 @@
 import { JwtPayload } from "jsonwebtoken"
 import { Category } from "../model/category.schema"
+import { CommentImage } from "../model/comment-image.schema"
 import { User } from "../model/user.schema"
 
 export enum RoleType {
@@ -57,3 +58,5 @@ export type GetEmailAsStringOrArray = "string" | "array"
 export type CreateCategoryInput = HelpExtractFromObject<Category, "name">
 
 export type CategoryIdObjectType = {categoryId:string}
+
+export type CreateCommentImageInput = HelpExtractFromObject<CommentImage, "content" | "mimeType">

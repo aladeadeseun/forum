@@ -40,9 +40,43 @@ export default `#graphql
     updatedAt:DateTime!
   }
 
+  type Thread{
+    #Thread id
+    _id:ID!
+    #Indicate weather the thread is already locked
+    locked:Boolean!
+    #Thread title
+    title:String!
+    #Thread category
+    category:Category!
+    #The time the thread was created
+    createdAt:DateTime!
+    #The last time the thread was updated
+    updatedAt:DateTime!
+  }
+
+  type Comment{
+    _id:ID!
+    #This comment is the added as part of the thread when it was created.
+    isFirst:Boolean!
+    #Thread or comment body or description
+    body:String!
+    #Thread or comment author 
+    author:User!
+    #This indicate wether the post was hidden from view because the comment violate the forum rules and regulation
+    hidden:Boolean!
+  }
+
+  type CommentImage{
+    _id:ID!
+    name:String!
+    comment:Comment!
+  }
+
   ${getMutationResponse("CreateUserMutationResponse", "User")}
   ${getMutationResponse("LoginMutationResponse", "User")}
   ${getMutationResponse("SendVerificationEmailMutationResponse")}
   ${getMutationResponse("VerifyEmailMutationResponse")}
   ${getMutationResponse("CategoryRequestResponse", "Category")}
+  ${getMutationResponse("CreateThreadResponse", "Thread")}
 `

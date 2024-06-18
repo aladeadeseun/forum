@@ -22,6 +22,7 @@ import depthLimit from 'graphql-depth-limit';
 import getConfig from "./config";
 
 import { connectDB, disconnectDB } from './db/connectDB';
+import { authMiddleware, getUploadImgHtml, showImage, testingCsrf, uploadCommentImageMiddleware } from './middleware';
 import schema from "./schema";
 import { Context, context } from './util/context';
 
@@ -32,6 +33,7 @@ process.on("uncaughtException", (err) => {
 
 // do something when app is closing
 process.on('beforeExit', async function(){
+  console.log("Disconnect from server.")
   await disconnectDB()
 });
 
@@ -58,6 +60,7 @@ async function main(){
   const server = new ApolloServer<Context>({
     schema,
     validationRules:[depthLimit(10)],
+    csrfPrevention:true,
     plugins: [
       // Proper shutdown for the HTTP server.
       ApolloServerPluginDrainHttpServer({ httpServer, }),
@@ -119,6 +122,7 @@ async function main(){
   });
 
   await server.start();
+
   app.use(
     '/graphql', 
     compression(),
@@ -132,6 +136,19 @@ async function main(){
     bodyParser.json(), 
     expressMiddleware(server, { context, })
   );
+
+  app.use(
+    "/upload", 
+    compression(), 
+    cookieParser()
+  )
+
+  //upload image for comment body
+  app.post("/upload", authMiddleware, uploadCommentImageMiddleware)
+  //I needed this for testing purpose
+  app.get("/upload", authMiddleware, getUploadImgHtml)
+
+  app.get("/images/show/:cmtImgId", showImage)
 
   // Now that our HTTP server is fully set up, actually listen.
   httpServer.listen(PORT, () => {

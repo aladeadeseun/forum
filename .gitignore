@@ -107,3 +107,6 @@ package-lock.json
 *v8.log
 /lib/
 dump.rdb
+
+/test-image
+/src/test.ts

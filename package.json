@@ -7,6 +7,7 @@
     "@apollo/server": "^4.10.4",
     "@typegoose/typegoose": "^12.5.0",
     "argon2": "^0.40.3",
+    "busboy": "^1.6.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -24,6 +25,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/busboy": "^1.5.4",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
