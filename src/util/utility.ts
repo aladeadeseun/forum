@@ -75,10 +75,21 @@ export function getRandomNumber(min: number, max: number){
   return (min + Math.floor((Math.random() * ((max + 1) - min))))
 }
 
-export function validateMongoDbId(_id: string): Types.ObjectId | string{
+export function validateMongoDbId(_id: string): true | string{
   if(Types.ObjectId.isValid(_id)) {
-    return new Types.ObjectId(_id)
+    return true
   }
-
   return `Invalid id "${_id}"`
+}
+
+export function parseOneStringToMongoDBObject(_id: string){
+  return new Types.ObjectId(_id)
+}
+
+export function parseStringToMongoDBObject(_ids:string[]){
+  const _idArray: Types.ObjectId[] = []
+  for(const _id of _ids){
+    _idArray.push(new Types.ObjectId(_id))
+  }
+  return _idArray
 }

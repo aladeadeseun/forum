@@ -53,6 +53,8 @@ export default `#graphql
     createdAt:DateTime!
     #The last time the thread was updated
     updatedAt:DateTime!
+    #posts
+    comments(pagination:Pagination):[Comment]
   }
 
   type Comment{
@@ -65,11 +67,13 @@ export default `#graphql
     author:User!
     #This indicate wether the post was hidden from view because the comment violate the forum rules and regulation
     hidden:Boolean!
+    #Thread
+    thread:Thread!
   }
 
   type CommentImage{
     _id:ID!
-    name:String!
+    url:String!
     comment:Comment!
   }
 

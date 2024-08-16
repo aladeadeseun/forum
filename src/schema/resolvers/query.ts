@@ -9,5 +9,9 @@ export default {
   },
   categories(_root:any, _arg:any, {categoryService}:Context){
     return categoryService.read()
+  },
+  threads(_root:any,_arg:any){
+    console.log(_arg)
+    return []
   }
 }

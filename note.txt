@@ -33,3 +33,19 @@ https://stackoverflow.com/questions/1108799/pos-ui-design-development-what-shoul
 react-native
 https://medium.com/simform-engineering/apollo-graphql-with-react-native-part-1-29ec126d8c58
 https://www.apollographql.com/docs/react/integrations/react-native/
+
+Mongoose transaction
+https://blog.tericcabrel.com/how-to-use-mongodb-transaction-in-node-js/
+
+deploy-replica-set
+https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set/
+From mongosh, run rs.initiate() on replica set member 0.
+
+request.credentials configuration
+https://github.com/graphql/graphql-playground/issues/791
+
+GraphQL Resolvers: Best Practices
+https://medium.com/paypal-tech/graphql-resolvers-best-practices-cd36fdbcef55
+
+Type error initializing DataLoader with Typescript
+https://stackoverflow.com/questions/62052023/type-error-initializing-dataloader-with-typescript

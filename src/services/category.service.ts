@@ -1,8 +1,25 @@
+import DataLoader from "dataloader";
 import { ProjectionType, Types } from "mongoose";
-import { Category, default as CategoryModel } from "../model/category.schema";
+import CategoryModel, { Category } from "../model/category.schema";
 import { CreateCategoryInput } from "../types";
+import GetDataLoaderResolver from "../util/dataloader-resolver";
 
 export default class CategoryService {
+
+  private byId: DataLoader<string, Category | null>
+
+  constructor(){
+    this.byId = new DataLoader(async function(keys: readonly string[]){
+      
+      const listDict = GetDataLoaderResolver.mapListToDictionary<Category>(await CategoryModel.find({_id:{$in:keys}}))
+
+      return GetDataLoaderResolver.mapDictToList<Category>(keys, listDict, null)
+    })
+  }
+
+  loadCategoryById(_id: string){
+    this.byId.load(_id)
+  }
 
   private async getCategoryByName(name: string){
     name = name.toLocaleUpperCase()

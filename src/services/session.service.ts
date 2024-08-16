@@ -82,7 +82,7 @@ export default class SessionService {
     if(expiresIn > 0){
       expiryDate = new Date(expiresIn * 1000).toUTCString();
     }
-    
+    console.log("Setting cookie")
     //const cookie = ``;
     // res.setHeader("Set-Cookie", `${sessName}=${cookieValue};expires=${expiryDate};path=${path};HttpOnly=${httpOnly};Secure=${true};SameSite=None;`);
     res.http.headers.set("Set-Cookie", `${sessName}=${cookieValue};expires=${expiryDate};path=${path};HttpOnly=${httpOnly};Secure=${true};SameSite=None;`)

@@ -3,6 +3,8 @@ import Enum from "./enum";
 import Mutation from "./mutation";
 import Query from './query';
 import Scalar from './scalar';
+import __Type from "./type";
+
 import subscriptionResolver from "./subscription/resolvers";
 // ${require("./enum")}
 // ${require("./scalar")}
@@ -16,6 +18,7 @@ const pubsub = new PubSub();
 export default {
   ...Enum,
   ...Scalar,
+  ...__Type,
   Subscription:subscriptionResolver(pubsub),
   Query,
   Mutation

@@ -96,22 +96,33 @@ async function main(){
               ) {
                 //const {userAuthReq:{csrf, newToken, exp, keepMeLoggedIn}} = requestContext as GraphQLRequestContextWillSendResponse<Context>
 
+                // const {
+                //   userAuthReq:{
+                //     csrf, token, exp, keepMeLoggedIn, hasNewToken
+                //   }, sessionService
+                //   //userAuthReq:{ csrf, token, hasNewToken }
+                // } = requestContext.contextValue
+
                 const {
                   userAuthReq:{
-                    csrf, token, exp, keepMeLoggedIn, hasNewToken
-                  }, sessionService
+                    csrf, hasNewToken, token
+                  },
                   //userAuthReq:{ csrf, token, hasNewToken }
                 } = requestContext.contextValue
+
+                //Am adding this temporarily because of graphql playground, I might change it later
+                const ext: {csrf:string, token?:string} = {csrf}
 
                 //if new token is generated store in cookie
                 if(hasNewToken){
                   //response.http.headers.set("Set-Cookie", `${"forum"}=${token};expires=${expiryDate};path=${path};HttpOnly=${httpOnly};Secure=${true};SameSite=None;`)
-                  sessionService.setCookie(response, token, keepMeLoggedIn ? exp : 0);
+                  //sessionService.setCookie(response, token, keepMeLoggedIn ? exp : 0);
+                  ext.token = token
                 }
 
                 response.body.singleResult.extensions = {
                   ...response.body.singleResult.extensions,
-                  csrf
+                  ...ext
                 };
               }
             },

@@ -1,7 +1,7 @@
 import { Otp } from "../../model/otp.schema";
 import { CategoryIdObjectType, CreateCategoryInput, CreateThreadInputType, CreateUserInput, LoginInputType } from "../../types";
 import { Context } from "../../util/context";
-import { errorResponse, errorResponseWithMsg, successResponse, validateMongoDbId } from "../../util/utility";
+import { errorResponse, errorResponseWithMsg, parseOneStringToMongoDBObject, successResponse, validateMongoDbId } from "../../util/utility";
 import { CategorySchema } from "../../validation/category.validator";
 import { PinSchema } from "../../validation/pin.validator";
 import { validate } from "../../validation/thread.validator";
@@ -51,6 +51,11 @@ export default {
 
     if(!valResult.success){
       return errorResponse("login_error")
+    }
+
+    //if user already login, return
+    if(userAuthReq.user){
+      return successResponse("You already logged in", userAuthReq.user)  
     }
 
     const user = await userService.authenticate(input, sessionService, userAuthReq)
@@ -117,8 +122,6 @@ export default {
       return errorResponseWithMsg(`Category with the name of '${input.name}' already exists.`)
     }
 
-    console.log(createCategory)
-
     return successResponse("Category created successfully.", createCategory.toObject())
   },
 
@@ -135,7 +138,7 @@ export default {
       return errorResponseWithMsg(validId)
     }
 
-    const updateCatResult = await categoryService.update(input, validId)
+    const updateCatResult = await categoryService.update(input, parseOneStringToMongoDBObject(input.categoryId))
 
     if(updateCatResult === 1){
       return errorResponseWithMsg("Category not found.")
@@ -156,7 +159,7 @@ export default {
       return errorResponseWithMsg(validId)
     }
 
-    const deleteCategoryRes = await categoryService.delete(validId)
+    const deleteCategoryRes = await categoryService.delete(parseOneStringToMongoDBObject(categoryId))
 
     if(deleteCategoryRes === 1){
       return errorResponseWithMsg("Category not found.")
@@ -166,16 +169,19 @@ export default {
   },
 
   async createThread(
-    _root:any, input:CreateThreadInputType, 
+    _root:any, {input}:{input:CreateThreadInputType}, 
     {categoryService, commentImageService, threadService, commentService, userAuthReq:{user}}: Context
   ){
+    //validate user input
     const validationResult = await validate(categoryService, commentImageService, input)
+    //if error in user input
     if(validationResult !== false){
       return errorResponse("validation_error", validationResult)
     }
+    //return success message
     return successResponse(
       "Thread successfully created.", 
-      await threadService.addNewThread(commentService, user!._id, input)
+      await threadService.addNewThread(commentService, commentImageService, user!._id, input)
     )
   }
 }

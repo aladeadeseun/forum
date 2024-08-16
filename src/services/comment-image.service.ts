@@ -1,4 +1,4 @@
-import { ProjectionType, Types } from "mongoose";
+import mongoose, { ProjectionType, Types } from "mongoose";
 import getConfig from "../config";
 import CommentImageModel, { CommentImage } from "../model/comment-image.schema";
 import { CreateCommentImageInput } from "../types";
@@ -60,18 +60,23 @@ export default class CommentImageService{
 
     const commentImageError: string[] = []
 
-    let currentImageIdAsString : string = ''
+    let commentImageIdObj : Record<string, true> = {}
 
     for (const commentImage of  (await CommentImageModel.find({"_id":{$in:commentImageIdArray}}, ["_id"]))){
-
-      currentImageIdAsString = commentImage._id.toHexString()
-
-      if(commentImageIDAsString.indexOf(currentImageIdAsString) < 0){
-        commentImageError.push(`Image with Id of '${currentImageIdAsString}' not found`)
-      }//end if
+      commentImageIdObj[commentImage._id.toHexString()] = true
     }//end for loop
 
-    return commentImageError.length > 0 ? commentImageError : false
+    for(const commentImageId of commentImageIdArray){
+      const _id = commentImageId.toHexString()
+      if(!commentImageIdObj[_id]){
+        commentImageError.push(`Image with Id of '${_id}' not found.`)
+      }//end if
+    }
 
+    return commentImageError.length > 0 ? commentImageError : false
   }//end function
+
+  async setCommentImageAsSavedWithComment(commentImageIds: Types.ObjectId[], session?:mongoose.mongo.ClientSession){
+    return CommentImageModel.updateMany({_id:{$in:commentImageIds}}, {$set:{savedWithComment:true}}, {session})
+  }
 }

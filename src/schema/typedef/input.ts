@@ -33,4 +33,13 @@ export default `#graphql
     #thread category
     categoryId:ID!
   }
+
+  input Pagination{
+    cursor:String
+    limit:Int=20
+  }
+
+  input FilterThread{
+    categoryId:ID
+  }
 `

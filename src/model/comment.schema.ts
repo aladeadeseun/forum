@@ -16,8 +16,7 @@ export class Comment extends TimeStamps{
   public isFirst!:boolean
 
   @prop({
-    required: true,
-    trim: true,
+    trim: true, default:""
   })
   public body!: string;
 
