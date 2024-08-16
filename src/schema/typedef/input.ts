@@ -23,10 +23,14 @@ export default `#graphql
     shortBio:String=""
   }
 
-  input CreateThread{
+  input CreateThreadInput{
     #Thread title.
     title:String!
     #Thread content.
     content:String!
+    #comment image array
+    commentImageID:[ID]!
+    #thread category
+    categoryId:ID!
   }
 `

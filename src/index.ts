@@ -22,7 +22,7 @@ import depthLimit from 'graphql-depth-limit';
 import getConfig from "./config";
 
 import { connectDB, disconnectDB } from './db/connectDB';
-import { authMiddleware, getUploadImgHtml, showImage, testingCsrf, uploadCommentImageMiddleware } from './middleware';
+import { authMiddleware, getUploadImgHtml, showImage, uploadCommentImageMiddleware } from './middleware';
 import schema from "./schema";
 import { Context, context } from './util/context';
 

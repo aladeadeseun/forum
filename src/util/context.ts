@@ -1,9 +1,12 @@
 
 import getConfig from "../config";
 import CategoryService from "../services/category.service";
+import CommentImageService from "../services/comment-image.service";
+import CommentService from "../services/comment.service";
 import EmailService from "../services/email.service";
 import OtpService from "../services/otp.service";
 import SessionService from "../services/session.service";
+import ThreadService from "../services/thread.service";
 import UserService from "../services/user.service";
 import { UserAuthRequest } from "../types";
 
@@ -13,7 +16,10 @@ export interface Context {
   userAuthReq:UserAuthRequest,
   otpService:OtpService,
   emailService:EmailService,
-  categoryService:CategoryService
+  categoryService:CategoryService,
+  commentImageService: CommentImageService,
+  commentService:CommentService,
+  threadService:ThreadService
 }
 
 const sessionService = new SessionService()
@@ -26,6 +32,9 @@ export async function context( { req } : {req:any}){
   const otpService = new OtpService()
   const emailService = new EmailService()
   const categoryService = new CategoryService()
+  const commentImageService = new CommentImageService()
+  const commentService = new CommentService()
+  const threadService = new ThreadService()
 
   //get the token from cookie or header authorization
   const token:string  = (req.cookies && req.cookies[sessName]) || req.headers.authorization || ''
@@ -89,6 +98,9 @@ export async function context( { req } : {req:any}){
     sessionService, 
     otpService, 
     emailService,
-    categoryService
+    categoryService,
+    commentImageService,
+    commentService,
+    threadService
   };
 }//end function context

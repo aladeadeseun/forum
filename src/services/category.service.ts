@@ -1,4 +1,5 @@
-import { default as CategoryModel, default as categorySchema } from "../model/category.schema";
+import { ProjectionType, Types } from "mongoose";
+import { Category, default as CategoryModel } from "../model/category.schema";
 import { CreateCategoryInput } from "../types";
 
 export default class CategoryService {
@@ -29,9 +30,9 @@ export default class CategoryService {
     return catModel.save()
   }
 
-  async update({name}:CreateCategoryInput, _id:string){
+  async update({name}:CreateCategoryInput, _id:Types.ObjectId){
     //get category by id
-    const catModel = await categorySchema.findById(_id)
+    const catModel = await CategoryModel.findById(_id)
     //if the category does not exist return 1 to indicate the category does not exist
     if(!catModel || catModel.deletedAt !== null) return 1
     //check if the name already exist
@@ -42,7 +43,7 @@ export default class CategoryService {
     // console.log((prevCat && prevCat._id.toHexString() !== _id && prevCat.deletedAt === null))
 
     //if the previous category exists
-    if(prevCat && (prevCat._id.toHexString() !== _id) && prevCat.deletedAt === null){
+    if(prevCat && (prevCat._id.toHexString() !== _id.toHexString()) && prevCat.deletedAt === null){
       return false
     }
 
@@ -51,9 +52,9 @@ export default class CategoryService {
     return catModel.save()
   }
 
-  async delete(_id:string){
+  async delete(_id:Types.ObjectId){
     //get category by id
-    const catModel = await categorySchema.findById(_id)
+    const catModel = await CategoryModel.findById(_id)
     //if the category does not exist return 1 to indicate the category does not exist
     if(!catModel) return 1
     catModel.deletedAt = new Date()
@@ -63,5 +64,13 @@ export default class CategoryService {
 
   async read(){
     return CategoryModel.find({deletedAt:null})
+  }
+
+  async getOneCategoryById(categoryId: Types.ObjectId, select:ProjectionType<Category>){
+    return CategoryModel.findById(categoryId, select)
+  }
+
+  async categoryExists(categoryId: Types.ObjectId){
+    return !!(await CategoryModel.findById(categoryId,["_id"]))
   }
 }

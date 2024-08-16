@@ -1,9 +1,10 @@
 import { Otp } from "../../model/otp.schema";
-import { CategoryIdObjectType, CreateCategoryInput, CreateUserInput, LoginInputType } from "../../types";
+import { CategoryIdObjectType, CreateCategoryInput, CreateThreadInputType, CreateUserInput, LoginInputType } from "../../types";
 import { Context } from "../../util/context";
 import { errorResponse, errorResponseWithMsg, successResponse, validateMongoDbId } from "../../util/utility";
 import { CategorySchema } from "../../validation/category.validator";
 import { PinSchema } from "../../validation/pin.validator";
+import { validate } from "../../validation/thread.validator";
 import { UserAuthSchema, UserSchema } from "../../validation/user.validator";
 
 export default {
@@ -130,11 +131,11 @@ export default {
 
     const validId = validateMongoDbId(input.categoryId)
 
-    if(validId !== true){
+    if(typeof validId === "string"){
       return errorResponseWithMsg(validId)
     }
 
-    const updateCatResult = await categoryService.update(input, input.categoryId)
+    const updateCatResult = await categoryService.update(input, validId)
 
     if(updateCatResult === 1){
       return errorResponseWithMsg("Category not found.")
@@ -151,16 +152,30 @@ export default {
 
     const validId = validateMongoDbId(categoryId)
 
-    if(validId !== true){
+    if(typeof (validId) === "string"){
       return errorResponseWithMsg(validId)
     }
 
-    const deleteCategoryRes = await categoryService.delete(categoryId)
+    const deleteCategoryRes = await categoryService.delete(validId)
 
     if(deleteCategoryRes === 1){
       return errorResponseWithMsg("Category not found.")
     }
 
     return successResponse("Category successfully deleted.", deleteCategoryRes.toObject())
+  },
+
+  async createThread(
+    _root:any, input:CreateThreadInputType, 
+    {categoryService, commentImageService, threadService, commentService, userAuthReq:{user}}: Context
+  ){
+    const validationResult = await validate(categoryService, commentImageService, input)
+    if(validationResult !== false){
+      return errorResponse("validation_error", validationResult)
+    }
+    return successResponse(
+      "Thread successfully created.", 
+      await threadService.addNewThread(commentService, user!._id, input)
+    )
   }
 }

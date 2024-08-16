@@ -50,4 +50,28 @@ export default class CommentImageService{
 
     throw new Error(`Unknow ${_id}`)
   }
+
+  async checkIfCommentImageExist(commentImageIdArray: Types.ObjectId[]): Promise<false | string[]>{
+    const commentImageIDAsString: string[] = []
+
+    for(const commentImageID of commentImageIdArray){
+      commentImageIDAsString.push(commentImageID.toHexString())
+    }
+
+    const commentImageError: string[] = []
+
+    let currentImageIdAsString : string = ''
+
+    for (const commentImage of  (await CommentImageModel.find({"_id":{$in:commentImageIdArray}}, ["_id"]))){
+
+      currentImageIdAsString = commentImage._id.toHexString()
+
+      if(commentImageIDAsString.indexOf(currentImageIdAsString) < 0){
+        commentImageError.push(`Image with Id of '${currentImageIdAsString}' not found`)
+      }//end if
+    }//end for loop
+
+    return commentImageError.length > 0 ? commentImageError : false
+
+  }//end function
 }

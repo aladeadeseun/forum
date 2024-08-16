@@ -18,7 +18,6 @@ export class CommentImage extends TimeStamps{
   @prop({})
   mimeType!:string
 
-  //@prop()
 }
 
 const CommentImageModel = getModelForClass<typeof CommentImage>(CommentImage);

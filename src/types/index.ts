@@ -1,6 +1,9 @@
 import { JwtPayload } from "jsonwebtoken"
+import mongoose from "mongoose"
 import { Category } from "../model/category.schema"
 import { CommentImage } from "../model/comment-image.schema"
+import { Comment } from "../model/comment.schema"
+import { Thread } from "../model/thread.schema"
 import { User } from "../model/user.schema"
 
 export enum RoleType {
@@ -60,3 +63,7 @@ export type CreateCategoryInput = HelpExtractFromObject<Category, "name">
 export type CategoryIdObjectType = {categoryId:string}
 
 export type CreateCommentImageInput = HelpExtractFromObject<CommentImage, "content" | "mimeType">
+
+export type CreateThreadInputType = {title:string, content:string, commentImageID:string[],categoryId:string}
+
+export type CreateNewPostInputType = HelpExtractFromObject<Comment, "isFirst" | "body" | "author" | "images" | "thread">

@@ -26,3 +26,10 @@ ademega4 | password
 
 https://blog.logrocket.com/node-js-buffer-complete-guide/
 https://stackoverflow.com/questions/14269233/node-js-how-to-read-a-stream-into-a-buffer
+
+POS design
+https://stackoverflow.com/questions/1108799/pos-ui-design-development-what-should-be-included-avoided
+
+react-native
+https://medium.com/simform-engineering/apollo-graphql-with-react-native-part-1-29ec126d8c58
+https://www.apollographql.com/docs/react/integrations/react-native/

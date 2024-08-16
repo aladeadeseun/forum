@@ -1,8 +1,8 @@
 import { Ref, getModelForClass, prop, } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 import { Types } from "mongoose";
-import { Thread } from "./article.schema";
 import { CommentImage } from "./comment-image.schema";
+import { Thread } from "./thread.schema";
 import { User } from "./user.schema";
 
 export class Comment extends TimeStamps{

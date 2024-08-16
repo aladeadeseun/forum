@@ -15,7 +15,7 @@ export default `#graphql
     #delete existing category
     deleteCategory(categoryId:ID!): CategoryRequestResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false) @haspermission(requires:[ADMIN], throwError:false)
     #Create new thread mutation
-    # createThread():CreateThreadResponse
+    createThread(input:CreateThreadInput!):CreateThreadResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false)
   }
 `
 //@haspermission(requires:[ADMIN], throwError:false)

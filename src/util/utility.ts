@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import { v4 } from 'uuid';
 import { ErrorResponseType } from '../types';
 
@@ -75,8 +75,10 @@ export function getRandomNumber(min: number, max: number){
   return (min + Math.floor((Math.random() * ((max + 1) - min))))
 }
 
-export function validateMongoDbId(_id: string): true | string{
-  if(mongoose.Types.ObjectId.isValid(_id)) return true
+export function validateMongoDbId(_id: string): Types.ObjectId | string{
+  if(Types.ObjectId.isValid(_id)) {
+    return new Types.ObjectId(_id)
+  }
 
   return `Invalid id "${_id}"`
 }

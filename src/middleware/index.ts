@@ -52,6 +52,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
 export function uploadCommentImageMiddleware(req: Request, res: Response){
   //get 
+  //https://www.npmjs.com/package/busboy
   const bb = busboy({ headers: req.headers, limits:{files:3, fileSize:MAX_FILE_SIZE} });
   
   //I need this variable to keep track of the uploaded files
