@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import { v4 } from 'uuid';
+import getConfig from '../config';
 import { ErrorResponseType } from '../types';
 
 export function promisify(fn:Function, ...args:any[]) :Promise<any>{
@@ -92,4 +93,10 @@ export function parseStringToMongoDBObject(_ids:string[]){
     _idArray.push(new Types.ObjectId(_id))
   }
   return _idArray
+}
+
+export function getFetchQueryLimit(limit?:number){
+  //set defualt limit
+  if(limit) return limit
+  return getConfig("FETCH_QUERY_LIMIT")
 }

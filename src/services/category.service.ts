@@ -18,7 +18,7 @@ export default class CategoryService {
   }
 
   loadCategoryById(_id: string){
-    this.byId.load(_id)
+    return this.byId.load(_id)
   }
 
   private async getCategoryByName(name: string){

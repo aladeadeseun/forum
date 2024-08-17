@@ -4,4 +4,9 @@ export default `#graphql
     msg: String
     error:JSON
   }
+
+  interface QueryResponseWithPagination{
+    success: Boolean!
+    msg: String
+  }
 `

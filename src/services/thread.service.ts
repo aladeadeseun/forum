@@ -1,6 +1,7 @@
 import mongoose, { Types } from "mongoose";
+import getConfig from "../config";
 import ThreadModel from "../model/thread.schema";
-import { CreateThreadInputType } from "../types";
+import { CreateThreadInputType, FilterThread, Pagination } from "../types";
 import { parseStringToMongoDBObject } from "../util/utility";
 import CommentImageService from "./comment-image.service";
 import CommentService from "./comment.service";
@@ -41,5 +42,10 @@ export default class ThreadService{
     finally{
       await session.endSession()
     }
+  }
+
+  async fetchThreads(pagination?:Pagination, filter?:FilterThread){
+    console.log({pagination, filter})
+    return ThreadModel.find().limit(1)
   }
 }

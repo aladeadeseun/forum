@@ -67,3 +67,6 @@ export type CreateCommentImageInput = HelpExtractFromObject<CommentImage, "conte
 export type CreateThreadInputType = {title:string, content:string, commentImageID:string[],categoryId:string}
 
 export type CreateNewPostInputType = HelpExtractFromObject<Comment, "isFirst" | "body" | "author" | "images" | "thread">
+
+export type Pagination = {cursor?: string, limit:number}
+export type FilterThread = {categoryId?:string}

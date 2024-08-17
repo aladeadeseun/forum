@@ -1,8 +1,8 @@
-function getMutationResponse(mustionResponse: string, dataRes?: string){
+function getMutationResponse(mutationResponseName: string, dataRes?: string){
   
   if(dataRes){
     return `
-      type ${mustionResponse} implements MutationResponse {
+      type ${mutationResponseName} implements MutationResponse {
         success: Boolean!
         msg: String
         error:JSON
@@ -11,10 +11,23 @@ function getMutationResponse(mustionResponse: string, dataRes?: string){
     `
   }
   return `
-    type ${mustionResponse} implements MutationResponse {
+    type ${mutationResponseName} implements MutationResponse {
       success: Boolean!
       msg: String
       error:JSON
+    }
+  `
+}
+//ThreadQueryResponse
+//Thread
+function getQueryResponse(queryResponseName: string, dataType: string, desc?:string){
+  return `
+    ${desc ? ("#" + desc) : ""}
+    type ${queryResponseName}{
+      success:Boolean!
+      msg: String
+      data:[${dataType}]
+      pageInfo:PageInfo!
     }
   `
 }
@@ -77,10 +90,19 @@ export default `#graphql
     comment:Comment!
   }
 
+  type PageInfo{
+    hasNextPage:Boolean!
+    hasPreviousPage:Boolean!
+    endCursor:ID
+    startCursor:ID
+  }
+
   ${getMutationResponse("CreateUserMutationResponse", "User")}
   ${getMutationResponse("LoginMutationResponse", "User")}
   ${getMutationResponse("SendVerificationEmailMutationResponse")}
   ${getMutationResponse("VerifyEmailMutationResponse")}
   ${getMutationResponse("CategoryRequestResponse", "Category")}
   ${getMutationResponse("CreateThreadResponse", "Thread")}
+
+  ${getQueryResponse("ThreadQueryResponse", "Thread", "Thread query response.")}
 `
