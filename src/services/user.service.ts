@@ -2,14 +2,32 @@ import argon2 from "argon2";
 import { ObjectId, Types } from "mongoose";
 import UserModel, { User } from "../model/user.schema";
 
+import DataLoader from "dataloader";
 import getConfig from "../config";
 import { CreateUserInput, ErrorResponseType, HelpExtractFromObject, LoginInputType } from "../types";
 import { Context } from "../util/context";
+import GetDataLoaderResolver from "../util/dataloader-resolver";
 import SessionService from "./session.service";
 
 const saltRounds = getConfig("SALT_ROUND")
 
 export default class UserService{
+
+  private byId: DataLoader<string, User | null>
+
+  constructor(){
+    this.byId = new DataLoader(async function(keys: readonly string[]){
+      
+      const listDict = GetDataLoaderResolver.mapListToDictionary<User>(await UserModel.find({_id:{$in:keys}}))
+
+      return GetDataLoaderResolver.mapDictToList<User>(keys, listDict, null)
+    })
+  }
+
+  loadUserById(_id: string){
+    return this.byId.load(_id)
+  }
+
   async createCustomer({password, email, username, shortBio}: CreateUserInput){
     
     return UserModel.create({

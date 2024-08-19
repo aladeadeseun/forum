@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { v4 } from 'uuid';
 import getConfig from '../config';
-import { ErrorResponseType } from '../types';
+import { ErrorResponseType, Pagination } from '../types';
 
 export function promisify(fn:Function, ...args:any[]) :Promise<any>{
   return new Promise((resolve, reject)=>{
@@ -95,8 +95,76 @@ export function parseStringToMongoDBObject(_ids:string[]){
   return _idArray
 }
 
-export function getFetchQueryLimit(limit?:number){
-  //set defualt limit
-  if(limit) return limit
-  return getConfig("FETCH_QUERY_LIMIT")
+export function getPaginationData(pagination?: Pagination){
+  //set limit to defualt limit
+  let limit: number = getConfig("FETCH_QUERY_LIMIT")
+  //store the pagination cursor
+  let cursor: Types.ObjectId | undefined
+
+  let afterOrBefore: boolean = true
+  //if pagination
+  if(pagination){
+    //limit sent from client, use it
+    if(pagination.limit) {
+      //set limit
+      limit = pagination.limit
+    }//end if(pagination.limit)
+
+    //if the cursor is set and is valid mongodb 
+    if(pagination.cursor && Types.ObjectId.isValid(pagination.cursor)){
+      cursor = new Types.ObjectId(pagination.cursor)
+    }
+    afterOrBefore = pagination.afterOrBefore
+  }
+
+  return {limit, cursor, afterOrBefore}
+}
+
+
+export function sleep(sleepTimeInMs: number = 1_000): {promise:Promise<void>, abortSleep:()=>void}{
+  //store the timeout id
+  let timeoutId:NodeJS.Timeout | undefined = undefined
+  //return array of sleep and the abort in case I need to stop the timeout
+  return {
+    promise:new Promise((resolve:Function)=>{
+      timeoutId = setTimeout(()=>{
+        resolve()
+      }, sleepTimeInMs)
+    }),
+    abortSleep:function abortSleep(){
+      if(timeoutId) {
+        clearTimeout(timeoutId)
+        timeoutId =undefined
+      }
+    }
+  }
+}
+
+export function getDataAndPageInfo<T extends { _id:Types.ObjectId }>(
+  data:T[], limit: number, afterOrBefore:boolean, hasPrevOrNext: boolean
+){
+  
+  let hasPrev = false, hasNext = false, hasMore = data.length > limit
+
+  if(afterOrBefore){
+    hasPrev = hasPrevOrNext
+    hasNext = hasMore
+  }else{
+    hasPrev = hasMore
+    hasNext = hasPrevOrNext
+  }
+
+  data = (hasMore ? data.slice(0, limit) : data)
+
+  let endCursor, startCursor
+
+  if(data.length > 0){
+    startCursor = data[0]._id.toHexString()
+    endCursor = data[(data.length - 1)]._id.toHexString()
+  }
+
+  return { 
+    data, 
+    pageInfo:{ hasNext, hasPrev, endCursor, startCursor } 
+  }
 }

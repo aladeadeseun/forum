@@ -36,10 +36,16 @@ export default `#graphql
 
   input Pagination{
     cursor:String
-    limit:Int=20
+    limit:Int
+    afterOrBefore:Boolean
   }
 
   input FilterThread{
-    categoryId:ID
+    categoryId:ID,
+    shouldBeOnFrontPage:Boolean
+  }
+
+  input FilterComment{
+    threadId:ID
   }
 `

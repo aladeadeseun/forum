@@ -10,6 +10,9 @@ export class Thread extends TimeStamps{
   @prop({default:false})
   public locked!:boolean
 
+  @prop({default:false})
+  public shouldBeOnFrontPage:boolean=false
+
   @prop({
     required: true,
     trim: true,

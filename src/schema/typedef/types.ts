@@ -24,8 +24,6 @@ function getQueryResponse(queryResponseName: string, dataType: string, desc?:str
   return `
     ${desc ? ("#" + desc) : ""}
     type ${queryResponseName}{
-      success:Boolean!
-      msg: String
       data:[${dataType}]
       pageInfo:PageInfo!
     }
@@ -66,8 +64,8 @@ export default `#graphql
     createdAt:DateTime!
     #The last time the thread was updated
     updatedAt:DateTime!
-    #posts
-    comments(pagination:Pagination):[Comment]
+    #comments on the thread
+    comments(pagination:Pagination):CommentQueryResponse
   }
 
   type Comment{
@@ -82,17 +80,17 @@ export default `#graphql
     hidden:Boolean!
     #Thread
     thread:Thread!
+    #Images for the comment can be empty
+    commentImages:[CommentImage]!
   }
 
   type CommentImage{
-    _id:ID!
     url:String!
-    comment:Comment!
   }
 
   type PageInfo{
-    hasNextPage:Boolean!
-    hasPreviousPage:Boolean!
+    hasNext:Boolean!
+    hasPrev:Boolean!
     endCursor:ID
     startCursor:ID
   }
@@ -105,4 +103,6 @@ export default `#graphql
   ${getMutationResponse("CreateThreadResponse", "Thread")}
 
   ${getQueryResponse("ThreadQueryResponse", "Thread", "Thread query response.")}
+
+  ${getQueryResponse("CommentQueryResponse", "Comment", "Comment query response.")}
 `

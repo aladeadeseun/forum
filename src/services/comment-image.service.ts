@@ -38,7 +38,7 @@ export default class CommentImageService{
     return commentImage.save()
   }
 
-  getCommentImage(){
+  getCommentImage11(){
     return CommentImageModel.find()
   }
 

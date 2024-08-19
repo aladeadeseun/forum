@@ -50,5 +50,16 @@ https://medium.com/paypal-tech/graphql-resolvers-best-practices-cd36fdbcef55
 Type error initializing DataLoader with Typescript
 https://stackoverflow.com/questions/62052023/type-error-initializing-dataloader-with-typescript
 
+
 GraphQL Pagination
 https://engage.so/blog/a-deep-dive-into-offset-and-cursor-based-pagination-in-mongodb/
+
+Seeding MongoDB with faker documentation
+https://fakerjs.dev/guide/
+yarn add @faker-js/faker --dev
+https://www.npmjs.com/package/@faker-js/faker
+https://fakerjs.dev/api/
+
+DataLoader
+https://github.com/graphql/dataloader
+https://www.npmjs.com/package/dataloader

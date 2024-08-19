@@ -12,6 +12,7 @@ export default {
     return categoryService.read()
   },
   threads(_root:any, {pagination, filter}:{pagination?:Pagination, filter?:FilterThread}, {threadService}:Context){
+    //
     return threadService.fetchThreads(pagination, filter)
   }
 }

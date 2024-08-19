@@ -8,7 +8,7 @@ export class User extends TimeStamps{
   public readonly _id!: Types.ObjectId
 
   @prop({default:true})
-  public active!:boolean
+  public active:boolean = true
 
   @prop({
     required: true,
@@ -32,16 +32,16 @@ export class User extends TimeStamps{
   public username!:string
 
   @prop({default:""})
-  public shortBio!: string
+  public shortBio: string = ""
 
   @prop({default:"avatar.png"})
-  public avatar!: string
+  public avatar: string = "avatar.png"
 
   @prop({type:String, default:RoleType.MEMBER, enum:RoleType})
-  public role!:RoleType
+  public role:RoleType=RoleType.MEMBER
 
   @prop({ default: false })
-  public isEmailVerified!: boolean;
+  public isEmailVerified: boolean= false;
 
   @prop({ select: false })
   password!: string;

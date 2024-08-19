@@ -68,5 +68,20 @@ export type CreateThreadInputType = {title:string, content:string, commentImageI
 
 export type CreateNewPostInputType = HelpExtractFromObject<Comment, "isFirst" | "body" | "author" | "images" | "thread">
 
-export type Pagination = {cursor?: string, limit:number}
-export type FilterThread = {categoryId?:string}
+export type Pagination = {
+  //
+  cursor?: string, 
+  limit:number, 
+  afterOrBefore:boolean
+}
+export type FilterThread = {
+  categoryId?:string
+  shouldBeOnFrontPage?:boolean
+}
+
+export type PageInfo = {
+  hasNext:boolean
+  hasPrev:boolean
+  endCursor?:string
+  startCursor?:string
+}

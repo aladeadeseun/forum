@@ -26,6 +26,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/busboy": "^1.5.4",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.7",
@@ -44,6 +45,7 @@
     "build": "npx tsc",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "dev:test": "nodemon src/test.ts"
+    "dev:test": "nodemon src/test.ts",
+    "seed":"ts-node src/seeder/index.ts"
   }
 }
