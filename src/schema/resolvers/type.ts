@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { Category } from "../../model/category.schema";
 import { CommentImage } from "../../model/comment-image.schema";
 import { Comment } from "../../model/comment.schema";
+import { LikeComment } from "../../model/like.schema";
 import { Thread } from "../../model/thread.schema";
 import { User } from "../../model/user.schema";
 import { Pagination } from "../../types";
@@ -41,4 +42,24 @@ export default {
       else return userService.loadUserById(author.toHexString())
     }
   },
+  LikeComment:{
+    
+    comment({comment}:LikeComment, _arg:any, {commentService}:Context){
+      if(comment instanceof Comment) return comment
+      return commentService.loadCommentById(comment.toHexString())
+    },
+
+    totalLikes(
+      {comment, totalLikes}:LikeComment & {totalLikes?:number}, 
+      _arg:any, 
+      {likeCommentService}:Context
+    ){
+      
+      if(typeof(totalLikes) === "number") return totalLikes
+
+      return likeCommentService.loadTotalLikeByCommentId(
+        (comment instanceof Comment ? comment._id.toHexString() : comment.toHexString())
+      )
+    }
+  }
 }

@@ -85,3 +85,5 @@ export type PageInfo = {
   endCursor?:string
   startCursor?:string
 }
+
+export type LikeCommentIdObjectType = {commentId: string}

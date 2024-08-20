@@ -1,8 +1,9 @@
 import { Otp } from "../../model/otp.schema";
-import { CategoryIdObjectType, CreateCategoryInput, CreateThreadInputType, CreateUserInput, LoginInputType } from "../../types";
+import { CategoryIdObjectType, CreateCategoryInput, CreateThreadInputType, CreateUserInput, LikeCommentIdObjectType, LoginInputType } from "../../types";
 import { Context } from "../../util/context";
 import { errorResponse, errorResponseWithMsg, parseOneStringToMongoDBObject, successResponse, validateMongoDbId } from "../../util/utility";
 import { CategorySchema } from "../../validation/category.validator";
+import { validateLikeComment } from "../../validation/like-comment.validator";
 import { PinSchema } from "../../validation/pin.validator";
 import { validate } from "../../validation/thread.validator";
 import { UserAuthSchema, UserSchema } from "../../validation/user.validator";
@@ -182,6 +183,18 @@ export default {
     return successResponse(
       "Thread successfully created.", 
       await threadService.addNewThread(commentService, commentImageService, user!._id, input)
+    )
+  },
+
+  async likeComment(_root:any, {commentId}:LikeCommentIdObjectType, {likeCommentService, commentService, userAuthReq}: Context){
+
+    const result = await validateLikeComment(commentId, commentService)
+
+    if(result !== false) return errorResponse("validation_error", result)
+    
+    return successResponse(
+      "Request successful.", 
+      likeCommentService.toggleLikes(parseOneStringToMongoDBObject(commentId), userAuthReq.user!._id)
     )
   }
 }

@@ -63,3 +63,9 @@ https://fakerjs.dev/api/
 DataLoader
 https://github.com/graphql/dataloader
 https://www.npmjs.com/package/dataloader
+
+Pulling from array (I need this to remove likes from comment)
+https://stackoverflow.com/questions/16959099/how-to-remove-array-element-in-mongodb
+
+How to toggle array element
+https://stackoverflow.com/questions/51618537/how-to-toggle-an-element-in-array-in-mongodb

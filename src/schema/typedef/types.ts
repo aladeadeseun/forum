@@ -95,12 +95,19 @@ export default `#graphql
     startCursor:ID
   }
 
+  type LikeComment{
+    comment:Comment!
+    totalLikes:Int!
+  }
+
   ${getMutationResponse("CreateUserMutationResponse", "User")}
   ${getMutationResponse("LoginMutationResponse", "User")}
   ${getMutationResponse("SendVerificationEmailMutationResponse")}
   ${getMutationResponse("VerifyEmailMutationResponse")}
   ${getMutationResponse("CategoryRequestResponse", "Category")}
   ${getMutationResponse("CreateThreadResponse", "Thread")}
+
+  ${getMutationResponse("LikeCommentMutationResponse", "LikeComment")}
 
   ${getQueryResponse("ThreadQueryResponse", "Thread", "Thread query response.")}
 

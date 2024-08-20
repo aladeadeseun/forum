@@ -1,6 +1,8 @@
-import mongoose from "mongoose";
+import DataLoader from "dataloader";
+import mongoose, { Types } from "mongoose";
 import CommentModel, { Comment } from "../model/comment.schema";
 import { CreateNewPostInputType, Pagination } from "../types";
+import GetDataLoaderResolver from "../util/dataloader-resolver";
 import { getDataAndPageInfo, getPaginationData } from "../util/utility";
 
 /**
@@ -9,6 +11,22 @@ import { getDataAndPageInfo, getPaginationData } from "../util/utility";
  */
 
 export default class CommentService{
+
+  private byId: DataLoader<string, Comment | null>
+
+  constructor(){
+    this.byId = new DataLoader(async function(keys: readonly string[]){
+      
+      const listDict = GetDataLoaderResolver.mapListToDictionary<Comment>(await CommentModel.find({_id:{$in:keys}}))
+
+      return GetDataLoaderResolver.mapDictToList<Comment>(keys, listDict, null)
+    })
+  }
+
+  loadCommentById(_id: string){
+    return this.byId.load(_id)
+  }
+
 
   async getCommentByThreadId(threadId: string, pagination?:Pagination){
     const {limit, cursor, afterOrBefore} = getPaginationData(pagination)
@@ -43,5 +61,9 @@ export default class CommentService{
 
   addNewComment(input: CreateNewPostInputType, session?:mongoose.mongo.ClientSession){
     return new CommentModel(input).save({session})
+  }
+
+  async commentExists(_id:Types.ObjectId){
+    return !!(await CommentModel.findOne({_id}, "_id"))
   }
 }
