@@ -70,7 +70,7 @@ export default class CommentService{
 
     return getDataAndPageInfo(
       //am fetching 1 more document so I can use it to determine if there's more document.
-      await CommentModel.find(filterObject).limit((limit + 1)).sort({_id:-1}), 
+      await CommentModel.find(filterObject).limit((limit + 1)), 
       limit, afterOrBefore, hasPrevOrNext
     )
   }
