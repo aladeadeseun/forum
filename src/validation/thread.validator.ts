@@ -2,10 +2,8 @@ import { Types } from "mongoose"
 import { z } from "zod"
 import CategoryService from "../services/category.service"
 import CommentImageService from "../services/comment-image.service"
-import { CreateThreadInputType } from "../types"
+import { CreateThreadInputType, ValdationErrorObject } from "../types"
 import { parseOneStringToMongoDBObject, validateMongoDbId } from "../util/utility"
-
-type ValdationErrorObject = {[K in keyof CreateThreadInputType]?:string[]}
 
 const CategorySchema = z.object({
   title: z.string({
@@ -18,7 +16,7 @@ const CategorySchema = z.object({
   categoryId:z.string({
     invalid_type_error:'Thread category must be a string',
     required_error:"Thread category is required.",
-  }),
+  }).min(20),
   commentImageID:z.optional(z.string().array())
 })
 
@@ -26,7 +24,7 @@ export async function validate(catService: CategoryService, commentImgService: C
   //validate user input using zod
   const valResult =  CategorySchema.safeParse(input)
   //
-  let errors: ValdationErrorObject = {} as ValdationErrorObject
+  let errors: ValdationErrorObject<CreateThreadInputType> = {} as ValdationErrorObject<CreateThreadInputType>
 
   //if validation is not successful
   if(!valResult.success){
@@ -59,7 +57,7 @@ export async function validate(catService: CategoryService, commentImgService: C
     //validate the image to ensure its a valid mongo db id
     for(const imageId of input.commentImageID){
 
-      if(typeof(validateMongoDbId(input.categoryId)) === "string"){
+      if(typeof(validateMongoDbId(imageId)) === "string"){
         imageIdErrors.push(`Invalid image ID '${imageId}'.`)
       }//end if
       else{

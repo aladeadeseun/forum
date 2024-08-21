@@ -25,8 +25,6 @@ export default class LikeCommentService{
         }}
       ]) as TotalCommentLikeAggregates[]
 
-      console.log(totalLikesAggregate)
-
       return GetDataLoaderResolver.mapDictToList<TotalCommentLikeAggregates>(
         keys,
         GetDataLoaderResolver.mapListToDictionary<TotalCommentLikeAggregates>(totalLikesAggregate),
@@ -72,8 +70,6 @@ export default class LikeCommentService{
         totalLikes:{$sum:1}
       }}
     ]) as TotalCommentLikeAggregates[]
-
-    console.log(totalLikesAggregate)
 
     if(totalLikesAggregate.length > 0){
       totalLikes = totalLikesAggregate[0].totalLikes

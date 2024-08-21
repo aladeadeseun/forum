@@ -113,4 +113,8 @@ export default class ThreadService{
     validateMongoDbId(threadID, true)
     return ThreadModel.findOne({_id:parseOneStringToMongoDBObject(threadID)})
   }
+
+  async threadExists(threadId: string){
+    return !!(await ThreadModel.findById(threadId, ["_id"]))
+  }
 }

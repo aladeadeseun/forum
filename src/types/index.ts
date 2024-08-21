@@ -104,3 +104,5 @@ export type CreateCommentInputType = {
   commentImageID?:string[],
   threadId:string
 }
+
+export type ValdationErrorObject<T> = {[K in keyof T]?:string[]}

@@ -1,8 +1,10 @@
+import { Comment } from "../../model/comment.schema";
 import { Otp } from "../../model/otp.schema";
-import { CategoryIdObjectType, CreateCategoryInput, CreateThreadInputType, CreateUserInput, LikeCommentIdObjectType, LoginInputType } from "../../types";
+import { CategoryIdObjectType, CreateCategoryInput, CreateCommentInputType, CreateThreadInputType, CreateUserInput, LikeCommentIdObjectType, LoginInputType } from "../../types";
 import { Context } from "../../util/context";
-import { errorResponse, errorResponseWithMsg, parseOneStringToMongoDBObject, successResponse, validateMongoDbId } from "../../util/utility";
+import { errorResponse, errorResponseWithMsg, parseOneStringToMongoDBObject, parseStringToMongoDBObject, successResponse, validateMongoDbId } from "../../util/utility";
 import { CategorySchema } from "../../validation/category.validator";
+import { validateComment } from "../../validation/comment.validator";
 import { validateLikeComment } from "../../validation/like-comment.validator";
 import { PinSchema } from "../../validation/pin.validator";
 import { validate } from "../../validation/thread.validator";
@@ -198,7 +200,25 @@ export default {
     )
   },
 
-  async createComment(_root:any, {input}:{input:CreateThreadInputType},){
+  async createComment(_root:any, {input}:{input:CreateCommentInputType}, {threadService, commentImageService, commentService, userAuthReq}: Context){
 
+    const result = await validateComment(threadService, commentImageService, input)
+
+    if(result !== false) return errorResponse("validation_error", result)
+    
+    return successResponse<Comment>(
+      "Comment successful added.", 
+      await commentService.addNewComment({
+        author:userAuthReq.user!._id,
+        body:input.content,
+        isFirst:false,
+        images:(
+          Array.isArray(input.commentImageID) 
+          ? parseStringToMongoDBObject(input.commentImageID) : 
+          []
+        ),
+        thread:parseOneStringToMongoDBObject(input.threadId)
+      })
+    )
   }
 }
