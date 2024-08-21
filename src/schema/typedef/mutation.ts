@@ -18,6 +18,8 @@ export default `#graphql
     createThread(input:CreateThreadInput!):CreateThreadResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false)
     #Like comment
     likeComment(commentId:ID!):LikeCommentMutationResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false)
+    #create comment
+    createComment(input:CreateComment!):CreateCommentResponse @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false)
   }
 `
 //@haspermission(requires:[ADMIN], throwError:false)

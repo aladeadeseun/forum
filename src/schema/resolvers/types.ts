@@ -15,11 +15,22 @@ export default {
       if(category instanceof Category) return category
       return categoryService.loadCategoryById(category.toHexString())
     },
-    comments({_id, comments}:Thread & {comments?: Comment[]}, {pagination}:{pagination?:Pagination},{commentService}:Context){
+    async comments({_id, comments}:Thread & {comments?: Comment[]}, {pagination}:{pagination?:Pagination},{commentService}:Context){
       //if there's comment passed as part of the object return it
-      if(comments) return comments
+      if(comments) {
+        return {
+          data:comments,
+          pageInfo:{
+            hasNext:false,
+            hasPrev:false,
+            endCursor:comments[0]._id,
+            startCursor:comments[0]._id
+          }
+        }
+      }
+      //console.log(await commentService.filterComment({thread:_id}, pagination))
       //get comment for a thread
-      return commentService.getCommentByThreadId(_id.toHexString(), pagination)
+      return commentService.filterComment({thread:_id}, pagination)
     }
   },
   Comment:{
@@ -40,26 +51,20 @@ export default {
     author({author}:Comment, _arg:any, {userService}:Context){
       if(author instanceof User) return author
       else return userService.loadUserById(author.toHexString())
-    }
-  },
-  LikeComment:{
-    
-    comment({comment}:LikeComment, _arg:any, {commentService}:Context){
-      if(comment instanceof Comment) return comment
-      return commentService.loadCommentById(comment.toHexString())
     },
 
-    totalLikes(
-      {comment, totalLikes}:LikeComment & {totalLikes?:number}, 
+    async totalLikes(
+      {_id, totalLikes}:Comment & {totalLikes?:number}, 
       _arg:any, 
       {likeCommentService}:Context
     ){
-      
+
       if(typeof(totalLikes) === "number") return totalLikes
 
-      return likeCommentService.loadTotalLikeByCommentId(
-        (comment instanceof Comment ? comment._id.toHexString() : comment.toHexString())
-      )
+      const totalLikesAggregate = await likeCommentService.loadTotalLikeByCommentId(_id.toHexString())
+
+      return totalLikesAggregate ? totalLikesAggregate.totalLikes : 0
     }
-  }
+  },
+    
 }

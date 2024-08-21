@@ -1,9 +1,9 @@
 import DataLoader from "dataloader";
-import mongoose, { Types } from "mongoose";
+import mongoose, { isValidObjectId, Types } from "mongoose";
 import CommentModel, { Comment } from "../model/comment.schema";
-import { CreateNewPostInputType, Pagination } from "../types";
+import { CreateNewPostInputType, FilterComment, Pagination } from "../types";
 import GetDataLoaderResolver from "../util/dataloader-resolver";
-import { getDataAndPageInfo, getPaginationData } from "../util/utility";
+import { getDataAndPageInfo, getPaginationData, parseOneStringToMongoDBObject, validateMongoDbId } from "../util/utility";
 
 /**
  * const listDict = GetDataLoaderResolver.mapListToDictionary<Category>(await CategoryModel.find({_id:{$in:keys}}))
@@ -27,11 +27,27 @@ export default class CommentService{
     return this.byId.load(_id)
   }
 
+  async filterComment(filter?:FilterComment, pagination?:Pagination){
 
-  async getCommentByThreadId(threadId: string, pagination?:Pagination){
     const {limit, cursor, afterOrBefore} = getPaginationData(pagination)
     
-    const filterObject: Record<any, any> = {thread:threadId}
+    const filterObject: Record<any, any> = {}
+
+    if(filter){
+      if(filter.thread){
+        if(typeof filter.thread === "string"){
+          validateMongoDbId(filter.thread, true)
+          filterObject.thread = parseOneStringToMongoDBObject(filter.thread)
+        }else{
+          filterObject.thread = filter.thread
+        }
+      }
+
+      if(filter.author){
+        validateMongoDbId(filter.author, true)
+        filterObject.author = parseOneStringToMongoDBObject(filter.author)
+      }
+    }
 
     //after cursor are thread that are above cursor
     //before cursor are thread that are below cursor

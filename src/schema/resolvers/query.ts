@@ -1,4 +1,4 @@
-import { FilterThread, Pagination } from "../../types"
+import { FilterComment, FilterThread, Pagination } from "../../types"
 import { Context } from "../../util/context"
 
 export default {
@@ -14,5 +14,11 @@ export default {
   threads(_root:any, {pagination, filter}:{pagination?:Pagination, filter?:FilterThread}, {threadService}:Context){
     //
     return threadService.fetchThreads(pagination, filter)
+  },
+  comments(_root:any, {pagination, filter}:{pagination?:Pagination, filter?:FilterComment}, {commentService}:Context){
+    return commentService.filterComment(filter, pagination)
+  },
+  oneThread(_root:any, {threadID}:{threadID:string}, {threadService}:Context){
+    return threadService.fetchOneThread(threadID)
   }
 }

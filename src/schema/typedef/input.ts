@@ -29,9 +29,18 @@ export default `#graphql
     #Thread content.
     content:String!
     #comment image array
-    commentImageID:[ID]!
+    commentImageID:[ID]=[]
     #thread category
     categoryId:ID!
+  }
+
+  input CreateComment{
+    #Thread ID
+    threadId:ID!
+    #Thread content.
+    content:String!
+    #comment image array
+    commentImageID:[ID]=[]
   }
 
   input Pagination{
@@ -46,6 +55,7 @@ export default `#graphql
   }
 
   input FilterComment{
-    threadId:ID
+    thread:ID
+    author:ID
   }
 `

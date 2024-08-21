@@ -1,5 +1,5 @@
 import { JwtPayload } from "jsonwebtoken"
-import mongoose from "mongoose"
+import mongoose, { Types } from "mongoose"
 import { Category } from "../model/category.schema"
 import { CommentImage } from "../model/comment-image.schema"
 import { Comment } from "../model/comment.schema"
@@ -64,7 +64,11 @@ export type CategoryIdObjectType = {categoryId:string}
 
 export type CreateCommentImageInput = HelpExtractFromObject<CommentImage, "content" | "mimeType">
 
-export type CreateThreadInputType = {title:string, content:string, commentImageID:string[],categoryId:string}
+export type CreateThreadInputType = {
+  title:string, content:string, 
+  commentImageID?:string[],
+  categoryId:string
+}
 
 export type CreateNewPostInputType = HelpExtractFromObject<Comment, "isFirst" | "body" | "author" | "images" | "thread">
 
@@ -74,9 +78,16 @@ export type Pagination = {
   limit:number, 
   afterOrBefore:boolean
 }
+
 export type FilterThread = {
   categoryId?:string
   shouldBeOnFrontPage?:boolean
+  threadId?:string
+}
+
+export type FilterComment = {
+  thread?:string | Types.ObjectId,
+  author?:string
 }
 
 export type PageInfo = {
@@ -87,3 +98,9 @@ export type PageInfo = {
 }
 
 export type LikeCommentIdObjectType = {commentId: string}
+
+export type CreateCommentInputType = {
+  content:string, 
+  commentImageID?:string[],
+  threadId:string
+}

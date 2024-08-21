@@ -82,6 +82,8 @@ export default `#graphql
     thread:Thread!
     #Images for the comment can be empty
     commentImages:[CommentImage]!
+    #total number of likes
+    totalLikes:Int!
   }
 
   type CommentImage{
@@ -95,11 +97,6 @@ export default `#graphql
     startCursor:ID
   }
 
-  type LikeComment{
-    comment:Comment!
-    totalLikes:Int!
-  }
-
   ${getMutationResponse("CreateUserMutationResponse", "User")}
   ${getMutationResponse("LoginMutationResponse", "User")}
   ${getMutationResponse("SendVerificationEmailMutationResponse")}
@@ -107,7 +104,9 @@ export default `#graphql
   ${getMutationResponse("CategoryRequestResponse", "Category")}
   ${getMutationResponse("CreateThreadResponse", "Thread")}
 
-  ${getMutationResponse("LikeCommentMutationResponse", "LikeComment")}
+  ${getMutationResponse("LikeCommentMutationResponse", "Int")}
+
+  ${getMutationResponse("CreateCommentResponse", "Comment")}
 
   ${getQueryResponse("ThreadQueryResponse", "Thread", "Thread query response.")}
 

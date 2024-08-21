@@ -196,5 +196,9 @@ export default {
       "Request successful.", 
       likeCommentService.toggleLikes(parseOneStringToMongoDBObject(commentId), userAuthReq.user!._id)
     )
+  },
+
+  async createComment(_root:any, {input}:{input:CreateThreadInputType},){
+
   }
 }

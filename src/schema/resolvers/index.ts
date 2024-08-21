@@ -3,7 +3,7 @@ import Enum from "./enum";
 import Mutation from "./mutation";
 import Query from './query';
 import Scalar from './scalar';
-import __Type from "./type";
+import __Type from "./types";
 
 import subscriptionResolver from "./subscription/resolvers";
 // ${require("./enum")}

@@ -3,7 +3,7 @@ import mongoose, { Types } from "mongoose";
 import ThreadModel, { Thread } from "../model/thread.schema";
 import { CreateThreadInputType, FilterThread, PageInfo, Pagination } from "../types";
 import GetDataLoaderResolver from "../util/dataloader-resolver";
-import { getDataAndPageInfo, getPaginationData, parseStringToMongoDBObject } from "../util/utility";
+import { getDataAndPageInfo, getPaginationData, parseOneStringToMongoDBObject, parseStringToMongoDBObject, validateMongoDbId } from "../util/utility";
 import CommentImageService from "./comment-image.service";
 import CommentService from "./comment.service";
 
@@ -31,7 +31,7 @@ export default class ThreadService{
     {categoryId, commentImageID, content, title}:CreateThreadInputType
   ){
 
-    const commentImageIdArray = parseStringToMongoDBObject(commentImageID)
+    const commentImageIdArray = (commentImageID ? parseStringToMongoDBObject(commentImageID) : [])
 
     const session = await mongoose.startSession()
     
@@ -87,8 +87,12 @@ export default class ThreadService{
     if(filter){
       //if category is set
       if(filter.categoryId){
+        //validate id and throw error if not a valid object id
+        validateMongoDbId(filter.categoryId, true)
+        //set filter
         filterObject.category = filter.categoryId
       }
+
       //if to filter by should be on front page
       if(typeof(filter.shouldBeOnFrontPage) !== "undefined"){
         filterObject.shouldBeOnFrontPage = filter.shouldBeOnFrontPage
@@ -103,5 +107,10 @@ export default class ThreadService{
       await ThreadModel.find(filterObject).limit((limit + 1)).sort({_id:-1}), 
       limit, afterOrBefore, hasPrevOrNext
     )
+  }
+
+  async fetchOneThread(threadID:string){
+    validateMongoDbId(threadID, true)
+    return ThreadModel.findOne({_id:parseOneStringToMongoDBObject(threadID)})
   }
 }

@@ -19,7 +19,7 @@ const CategorySchema = z.object({
     invalid_type_error:'Thread category must be a string',
     required_error:"Thread category is required.",
   }),
-  commentImageID:z.string().array()
+  commentImageID:z.optional(z.string().array())
 })
 
 export async function validate(catService: CategoryService, commentImgService: CommentImageService, input: CreateThreadInputType){
@@ -49,7 +49,7 @@ export async function validate(catService: CategoryService, commentImgService: C
   }//end if
 
   //if the comment image does not have error and image was supplied
-  if(!errors.commentImageID && input.commentImageID.length > 0){
+  if(input.commentImageID && !errors.commentImageID && input.commentImageID.length > 0){
     
     //store the error
     const imageIdErrors: string[] = []

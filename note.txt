@@ -69,3 +69,6 @@ https://stackoverflow.com/questions/16959099/how-to-remove-array-element-in-mong
 
 How to toggle array element
 https://stackoverflow.com/questions/51618537/how-to-toggle-an-element-in-array-in-mongodb
+
+elematch
+https://www.mongodb.com/docs/manual/core/indexes/index-types/index-multikey/create-multikey-index-basic/
