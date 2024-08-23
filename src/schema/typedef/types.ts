@@ -112,6 +112,7 @@ export default `#graphql
   ${getMutationResponse("CreateCommentResponse", "Comment")}
   ${getMutationResponse("ReportCommentResponse")}
   ${getMutationResponse("LockThreadResponse", "Thread")}
+  ${getMutationResponse("HideShowCommentResponse", "Comment")}
 
   ${getQueryResponse("ThreadQueryResponse", "Thread", "Thread query response.")}
   ${getQueryResponse("CommentQueryResponse", "Comment", "Comment query response.")}

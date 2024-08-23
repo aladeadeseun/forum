@@ -7,6 +7,7 @@ import { Context } from "../../util/context";
 import { errorResponse, errorResponseWithMsg, parseOneStringToMongoDBObject, parseStringToMongoDBObject, successResponse, validateMongoDbId } from "../../util/utility";
 import { CategorySchema } from "../../validation/category.validator";
 import { validateComment } from "../../validation/comment.validator";
+import { validateHideShowComment } from "../../validation/hide-show-comment.validator";
 import { validateLikeComment } from "../../validation/like-comment.validator";
 import { PinSchema } from "../../validation/pin.validator";
 import { validateReportComment } from "../../validation/report-comment.validator";
@@ -197,7 +198,7 @@ export default (pubsub: RedisPubSub)=>({
 
     const result = await validateLikeComment(commentId, commentService)
 
-    if(typeof (result) === "object") return errorResponse("validation_error", result)
+    if(typeof (result) === "object") return errorResponseWithMsg(result.commentId)
 
     const userId = userAuthReq.user!._id
 
@@ -244,7 +245,7 @@ export default (pubsub: RedisPubSub)=>({
 
     const result = await validateReportComment(commentId, commentService)
 
-    if(typeof (result) === "object") return errorResponse("validation_error", result)
+    if(typeof (result) === "string") return errorResponseWithMsg(result)
 
     const userId = userAuthReq.user!._id
 
@@ -264,16 +265,31 @@ export default (pubsub: RedisPubSub)=>({
   async toggleLockThread(_root:any, {threadId}:{threadId:string}, {threadService}:Context){
     const validation = await validateToggleLockThread(threadId)
 
-    if(validation !== false) return errorResponse('validation_error', validation);
+    if(validation !== false) return errorResponseWithMsg(validation);
 
     const toggleThreadResult = await threadService.toggleLockThread(threadId)
 
     if(typeof toggleThreadResult === "string"){
-      return errorResponse('validation_error', {threadId:[toggleThreadResult]});
+      return errorResponseWithMsg(toggleThreadResult);
     }
     return successResponse(
       (toggleThreadResult.locked ? "Thread locked." : "Thread unlocked."),
       toggleThreadResult
+    )
+  },
+
+  async hideShowComment(_root:any, {commentId}:CommentIdObjectType, {commentService}:Context){
+    const validation = await validateHideShowComment(commentId)
+    if(validation !== false) return errorResponseWithMsg(validation);
+
+    const hideShowComment = await commentService.hideShowComment(commentId)
+
+    if(typeof hideShowComment === "string"){
+      return errorResponseWithMsg(hideShowComment)
+    }
+    return successResponse(
+      (hideShowComment.hidden ? "Comment hidden." : "Comment shown."),
+      hideShowComment
     )
   }
 })

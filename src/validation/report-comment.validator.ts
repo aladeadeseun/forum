@@ -6,13 +6,13 @@ export async function validateReportComment(commentId: string, commentService: C
  
   if(!commentId) {
     //return {success:false, errors:{commentId:["Comment Id is required."]}}
-    return {commentId:["Comment Id is required."]}
+    return "Comment Id is required."
   }
   //check if the id supplied is a valid mongo db id
   const validId = validateMongoDbId(commentId)
 
   if(validId !== true){
-    return {commentId:[validId]}
+    return validId
   }
 
   const comment = await commentService.commentExists(
@@ -20,11 +20,11 @@ export async function validateReportComment(commentId: string, commentService: C
   )
 
   if(!comment){
-    return {commentId:["Comment not found."]}
+    return "Comment not found."
   }
 
   if(comment.hidden){
-    return {commentId:["Comment already hidden."]}
+    return "Comment already hidden."
   }
   
   return false

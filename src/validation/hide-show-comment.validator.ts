@@ -1,13 +1,12 @@
 import { validateMongoDbId } from "../util/utility";
 
-export async function validateToggleLockThread(threadId: string){
+export async function validateHideShowComment(commentId: string){
  
-  if(!threadId) {
-    
+  if(!commentId) {
     return "Thread Id is required."
   }
   //check if the id supplied is a valid mongo db id
-  const validId = validateMongoDbId(threadId)
+  const validId = validateMongoDbId(commentId)
 
   if(validId !== true){
     return validId

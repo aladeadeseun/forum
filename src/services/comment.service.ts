@@ -88,4 +88,18 @@ export default class CommentService{
     validateMongoDbId(commentID, true)
     return CommentModel.findOne({_id:parseOneStringToMongoDBObject(commentID)})
   }
+
+  async hideShowComment(commentId:string){
+    //I have already check if the comment exists before in the validation
+    const comment = await CommentModel.findByIdAndUpdate(
+      commentId, 
+      [{$set:{hidden:{$eq:[false,"$hidden"]}}}],
+      {new:true}
+    )
+    if(!comment){
+      return "Comment not found."
+    }
+    
+    return comment
+  }
 }
