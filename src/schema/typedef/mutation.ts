@@ -22,6 +22,8 @@ export default `#graphql
     createComment(input:CreateComment!):CreateCommentResponse! @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false)
     #report comment
     reportComment(commentId:ID!):ReportCommentResponse! @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false)
+    #Admin lock thread
+    toggleLockThread(threadId:ID!): LockThreadResponse! @checkCsrf @isloggedin(emailMustBeVerified: true, throwError:false) @haspermission(requires:[ADMIN, MODERATOR], throwError:false)
   }
 `
 //@haspermission(requires:[ADMIN], throwError:false)

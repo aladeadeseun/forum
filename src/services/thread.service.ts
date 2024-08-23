@@ -117,4 +117,20 @@ export default class ThreadService{
   async threadExists(threadId: string){
     return !!(await ThreadModel.findById(threadId, ["_id"]))
   }
+
+  async toggleLockThread(threadId:string){
+    //I have already check if the thread exists before in the validation
+    const thread = await ThreadModel.findByIdAndUpdate(
+      threadId, 
+      [{$set:{locked:{$eq:[false,"$locked"]}}}],
+      {new:true}
+    )
+    if(!thread){
+      return "Thread not found."
+    }
+    
+    // thread.locked = thread!.locked
+    // await thread!.save()
+    return thread
+  }
 }

@@ -76,3 +76,6 @@ https://www.mongodb.com/docs/manual/core/indexes/index-types/index-multikey/crea
 
 //adding subscription with redis
 https://www.npmjs.com/package/graphql-redis-subscriptions
+
+mega999@me.com  has moderator role
+ademega4@gmail.com has admin role

@@ -11,6 +11,7 @@ import { validateLikeComment } from "../../validation/like-comment.validator";
 import { PinSchema } from "../../validation/pin.validator";
 import { validateReportComment } from "../../validation/report-comment.validator";
 import { validate } from "../../validation/thread.validator";
+import { validateToggleLockThread } from "../../validation/toggle-lock-thread.validator";
 import { UserAuthSchema, UserSchema } from "../../validation/user.validator";
 
 export default (pubsub: RedisPubSub)=>({
@@ -251,12 +252,28 @@ export default (pubsub: RedisPubSub)=>({
       parseOneStringToMongoDBObject(commentId), userId
     )
 
-    console.log(reportCommentResult)
+    //console.log(reportCommentResult)
 
     if(reportCommentResult !== false){
       //notify admin that a comment has been flagged
     }
     
     return successResponse("Request successful.")
+  },
+
+  async toggleLockThread(_root:any, {threadId}:{threadId:string}, {threadService}:Context){
+    const validation = await validateToggleLockThread(threadId)
+
+    if(validation !== false) return errorResponse('validation_error', validation);
+
+    const toggleThreadResult = await threadService.toggleLockThread(threadId)
+
+    if(typeof toggleThreadResult === "string"){
+      return errorResponse('validation_error', {threadId:[toggleThreadResult]});
+    }
+    return successResponse(
+      (toggleThreadResult.locked ? "Thread locked." : "Thread unlocked."),
+      toggleThreadResult
+    )
   }
 })
