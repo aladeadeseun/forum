@@ -1,6 +1,7 @@
-import { PubSub } from 'graphql-subscriptions';
+//import { PubSub } from 'graphql-subscriptions';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 import Enum from "./enum";
-import Mutation from "./mutation";
+import mutationResolver from "./mutation";
 import Query from './query';
 import Scalar from './scalar';
 import __Type from "./types";
@@ -13,7 +14,8 @@ import subscriptionResolver from "./subscription/resolvers";
 // ${require("./mutation")}
 // ${require("./query")}
 
-const pubsub = new PubSub();
+//const pubsub = new PubSub();
+const pubsub = new RedisPubSub()
 
 export default {
   ...Enum,
@@ -21,5 +23,5 @@ export default {
   ...__Type,
   Subscription:subscriptionResolver(pubsub),
   Query,
-  Mutation
+  Mutation:mutationResolver(pubsub)
 }

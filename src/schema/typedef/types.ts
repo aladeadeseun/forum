@@ -97,6 +97,11 @@ export default `#graphql
     startCursor:ID
   }
 
+  type LikeComment{
+    commentId:ID!
+    totalLikes:Int!
+  }
+
   ${getMutationResponse("CreateUserMutationResponse", "User")}
   ${getMutationResponse("LoginMutationResponse", "User")}
   ${getMutationResponse("SendVerificationEmailMutationResponse")}

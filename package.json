@@ -15,6 +15,7 @@
     "express": "^4.19.2",
     "graphql": "^16.8.1",
     "graphql-depth-limit": "^1.1.0",
+    "graphql-redis-subscriptions": "^2.6.1",
     "graphql-subscriptions": "^2.0.0",
     "graphql-type-json": "^0.3.2",
     "graphql-ws": "^5.16.0",
@@ -46,6 +47,6 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "dev:test": "nodemon src/test.ts",
-    "seed":"ts-node src/seeder/index.ts"
+    "seed": "ts-node src/seeder/index.ts"
   }
 }

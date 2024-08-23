@@ -1,5 +1,5 @@
 import DataLoader from "dataloader";
-import mongoose, { isValidObjectId, Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import CommentModel, { Comment } from "../model/comment.schema";
 import { CreateNewPostInputType, FilterComment, Pagination } from "../types";
 import GetDataLoaderResolver from "../util/dataloader-resolver";
@@ -79,7 +79,13 @@ export default class CommentService{
     return new CommentModel(input).save({session})
   }
 
-  async commentExists(_id:Types.ObjectId){
-    return !!(await CommentModel.findOne({_id}, "_id"))
+  commentExists(_id:Types.ObjectId){
+    return CommentModel.findOne({_id}, ["_id", "thread"])
+  }
+
+  async fetchOneComment(commentID: string){
+    //console.log(commentID)
+    validateMongoDbId(commentID, true)
+    return CommentModel.findOne({_id:parseOneStringToMongoDBObject(commentID)})
   }
 }

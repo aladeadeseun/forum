@@ -20,5 +20,8 @@ export default {
   },
   oneThread(_root:any, {threadID}:{threadID:string}, {threadService}:Context){
     return threadService.fetchOneThread(threadID)
+  },
+  oneComment(_root:any, {commentID}:{commentID:string},{commentService}:Context){
+    return commentService.fetchOneComment(commentID)
   }
 }

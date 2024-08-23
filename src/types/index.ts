@@ -106,3 +106,8 @@ export type CreateCommentInputType = {
 }
 
 export type ValdationErrorObject<T> = {[K in keyof T]?:string[]}
+
+export type LikedComment = {
+  commentId:string
+  totalLikes:number
+}

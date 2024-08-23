@@ -1,6 +1,8 @@
+//import { PubSub } from "graphql-subscriptions";
+import { RedisPubSub } from "graphql-redis-subscriptions";
+import { SubscritionEventType } from "../../enum";
 import { Comment } from "../../model/comment.schema";
-import { Otp } from "../../model/otp.schema";
-import { CategoryIdObjectType, CreateCategoryInput, CreateCommentInputType, CreateThreadInputType, CreateUserInput, LikeCommentIdObjectType, LoginInputType } from "../../types";
+import { CategoryIdObjectType, CreateCategoryInput, CreateCommentInputType, CreateThreadInputType, CreateUserInput, LikeCommentIdObjectType, LikedComment, LoginInputType } from "../../types";
 import { Context } from "../../util/context";
 import { errorResponse, errorResponseWithMsg, parseOneStringToMongoDBObject, parseStringToMongoDBObject, successResponse, validateMongoDbId } from "../../util/utility";
 import { CategorySchema } from "../../validation/category.validator";
@@ -10,7 +12,8 @@ import { PinSchema } from "../../validation/pin.validator";
 import { validate } from "../../validation/thread.validator";
 import { UserAuthSchema, UserSchema } from "../../validation/user.validator";
 
-export default {
+export default (pubsub: RedisPubSub)=>({
+
   async createNewUser(_root: any, {input}:{input:CreateUserInput}, {userService}: Context){
 
     const valResult =  UserSchema.safeParse(input)
@@ -192,11 +195,24 @@ export default {
 
     const result = await validateLikeComment(commentId, commentService)
 
-    if(result !== false) return errorResponse("validation_error", result)
+    if(typeof (result) === "object") return errorResponse("validation_error", result)
+
+    const userId = userAuthReq.user!._id
+
+    const likeCommentResult = await likeCommentService.toggleLikes(
+      parseOneStringToMongoDBObject(commentId), userId
+    )
+
+    pubsub.publish(
+      SubscritionEventType.LIKED_COMMENT, {
+        likedComment:{ commentId, totalLikes:likeCommentResult } as LikedComment,
+        filter:{except:userId.toHexString(), threadId:result}
+      }
+    )
     
     return successResponse(
       "Request successful.", 
-      likeCommentService.toggleLikes(parseOneStringToMongoDBObject(commentId), userAuthReq.user!._id)
+      likeCommentResult
     )
   },
 
@@ -221,4 +237,4 @@ export default {
       })
     )
   }
-}
+})

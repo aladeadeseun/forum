@@ -72,3 +72,7 @@ https://stackoverflow.com/questions/51618537/how-to-toggle-an-element-in-array-i
 
 elematch
 https://www.mongodb.com/docs/manual/core/indexes/index-types/index-multikey/create-multikey-index-basic/
+
+
+//adding subscription with redis
+https://www.npmjs.com/package/graphql-redis-subscriptions

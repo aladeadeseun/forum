@@ -66,5 +66,4 @@ export default {
       return totalLikesAggregate ? totalLikesAggregate.totalLikes : 0
     }
   },
-    
 }
