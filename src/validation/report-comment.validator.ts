@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import CommentService from "../services/comment.service";
 import { parseOneStringToMongoDBObject, validateMongoDbId } from "../util/utility";
 
-export async function validateLikeComment(commentId: string, commentService: CommentService){
+export async function validateReportComment(commentId: string, commentService: CommentService){
  
   if(!commentId) {
     //return {success:false, errors:{commentId:["Comment Id is required."]}}
@@ -15,13 +15,17 @@ export async function validateLikeComment(commentId: string, commentService: Com
     return {commentId:[validId]}
   }
 
-  const commentWithThread = await commentService.commentExists(
-    parseOneStringToMongoDBObject(commentId), {"thread":1}
+  const comment = await commentService.commentExists(
+    parseOneStringToMongoDBObject(commentId), {"hidden":1}
   )
 
-  if(!commentWithThread){
+  if(!comment){
     return {commentId:["Comment not found."]}
   }
+
+  if(comment.hidden){
+    return {commentId:["Comment already hidden."]}
+  }
   
-  return (commentWithThread.thread as Types.ObjectId).toHexString()
+  return false
 }

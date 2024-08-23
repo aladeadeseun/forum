@@ -1,5 +1,5 @@
 import DataLoader from "dataloader";
-import mongoose, { Types } from "mongoose";
+import mongoose, { ProjectionType, Types } from "mongoose";
 import CommentModel, { Comment } from "../model/comment.schema";
 import { CreateNewPostInputType, FilterComment, Pagination } from "../types";
 import GetDataLoaderResolver from "../util/dataloader-resolver";
@@ -79,8 +79,8 @@ export default class CommentService{
     return new CommentModel(input).save({session})
   }
 
-  commentExists(_id:Types.ObjectId){
-    return CommentModel.findOne({_id}, ["_id", "thread"])
+  commentExists(_id:Types.ObjectId, projection:ProjectionType<Comment>){
+    return CommentModel.findOne({_id}, projection)
   }
 
   async fetchOneComment(commentID: string){

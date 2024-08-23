@@ -2,13 +2,14 @@
 import { RedisPubSub } from "graphql-redis-subscriptions";
 import { SubscritionEventType } from "../../enum";
 import { Comment } from "../../model/comment.schema";
-import { CategoryIdObjectType, CreateCategoryInput, CreateCommentInputType, CreateThreadInputType, CreateUserInput, LikeCommentIdObjectType, LikedComment, LoginInputType } from "../../types";
+import { CategoryIdObjectType, CommentIdObjectType, CreateCategoryInput, CreateCommentInputType, CreateThreadInputType, CreateUserInput, LikedComment, LoginInputType } from "../../types";
 import { Context } from "../../util/context";
 import { errorResponse, errorResponseWithMsg, parseOneStringToMongoDBObject, parseStringToMongoDBObject, successResponse, validateMongoDbId } from "../../util/utility";
 import { CategorySchema } from "../../validation/category.validator";
 import { validateComment } from "../../validation/comment.validator";
 import { validateLikeComment } from "../../validation/like-comment.validator";
 import { PinSchema } from "../../validation/pin.validator";
+import { validateReportComment } from "../../validation/report-comment.validator";
 import { validate } from "../../validation/thread.validator";
 import { UserAuthSchema, UserSchema } from "../../validation/user.validator";
 
@@ -191,7 +192,7 @@ export default (pubsub: RedisPubSub)=>({
     )
   },
 
-  async likeComment(_root:any, {commentId}:LikeCommentIdObjectType, {likeCommentService, commentService, userAuthReq}: Context){
+  async likeComment(_root:any, {commentId}:CommentIdObjectType, {likeCommentService, commentService, userAuthReq}: Context){
 
     const result = await validateLikeComment(commentId, commentService)
 
@@ -236,5 +237,26 @@ export default (pubsub: RedisPubSub)=>({
         thread:parseOneStringToMongoDBObject(input.threadId)
       })
     )
+  },
+
+  async reportComment(_root:any, {commentId}:CommentIdObjectType, {commentService, userAuthReq, reportCommentService}: Context){
+
+    const result = await validateReportComment(commentId, commentService)
+
+    if(typeof (result) === "object") return errorResponse("validation_error", result)
+
+    const userId = userAuthReq.user!._id
+
+    const reportCommentResult = await reportCommentService.reportComment(
+      parseOneStringToMongoDBObject(commentId), userId
+    )
+
+    console.log(reportCommentResult)
+
+    if(reportCommentResult !== false){
+      //notify admin that a comment has been flagged
+    }
+    
+    return successResponse("Request successful.")
   }
 })

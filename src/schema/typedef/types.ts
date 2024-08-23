@@ -108,12 +108,10 @@ export default `#graphql
   ${getMutationResponse("VerifyEmailMutationResponse")}
   ${getMutationResponse("CategoryRequestResponse", "Category")}
   ${getMutationResponse("CreateThreadResponse", "Thread")}
-
   ${getMutationResponse("LikeCommentMutationResponse", "Int")}
-
   ${getMutationResponse("CreateCommentResponse", "Comment")}
+  ${getMutationResponse("ReportCommentResponse")}
 
   ${getQueryResponse("ThreadQueryResponse", "Thread", "Thread query response.")}
-
   ${getQueryResponse("CommentQueryResponse", "Comment", "Comment query response.")}
 `

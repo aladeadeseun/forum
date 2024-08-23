@@ -97,7 +97,7 @@ export type PageInfo = {
   startCursor?:string
 }
 
-export type LikeCommentIdObjectType = {commentId: string}
+export type CommentIdObjectType = {commentId: string}
 
 export type CreateCommentInputType = {
   content:string, 

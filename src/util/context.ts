@@ -6,6 +6,7 @@ import CommentService from "../services/comment.service";
 import EmailService from "../services/email.service";
 import LikeCommentService from "../services/like.service";
 import OtpService from "../services/otp.service";
+import { ReportCommentService } from "../services/report.service";
 import SessionService from "../services/session.service";
 import ThreadService from "../services/thread.service";
 import UserService from "../services/user.service";
@@ -21,7 +22,8 @@ export interface Context {
   commentImageService: CommentImageService,
   commentService:CommentService,
   threadService:ThreadService,
-  likeCommentService:LikeCommentService
+  likeCommentService:LikeCommentService,
+  reportCommentService: ReportCommentService
 }
 
 const sessionService = new SessionService()
@@ -38,6 +40,7 @@ export async function context( { req } : {req:any}){
   const commentService = new CommentService()
   const threadService = new ThreadService()
   const likeCommentService = new LikeCommentService()
+  const reportCommentService = new ReportCommentService()
 
   //get the token from cookie or header authorization
   const token:string  = (req.cookies && req.cookies[sessName]) || req.headers.authorization || ''
@@ -105,6 +108,7 @@ export async function context( { req } : {req:any}){
     commentImageService,
     commentService,
     threadService,
-    likeCommentService
+    likeCommentService,
+    reportCommentService
   };
 }//end function context
